@@ -3,221 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RM Location ZH | Agence & Académie Premium</title>
+    <title>Yac Design • Création de sites pour indépendants</title>
     <style>
-        /* =========================================
-           DESIGN SYSTEM (ULTRA LUXE : NOIR PROFOND & OR)
-           ========================================= */
+        /* --- 1. DESIGN SYSTEM (DARK LUXE) --- */
         :root {
-            --bg-color: #030303;       
-            --card-bg: #0f0f0f;        
-            --text-main: #ffffff;      
-            --text-muted: #888888;     
-            --accent: #D4AF37;         /* Or premium */
-            --accent-glow: rgba(212, 175, 55, 0.15);
-            --whatsapp: #25D366;
-            --mail-bg: #1a1a1a;
+            --bg-color: #050505;       /* Noir Profond */
+            --card-bg: #111111;        /* Gris très foncé */
+            --text-color: #ffffff;     /* Blanc */
+            --sub-text: #bbbbbb;       /* Gris clair */
+            --accent-color: #D4AF37;   /* OR (Luxe) */
         }
 
-        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; line-height: 1.6; scroll-behavior: smooth; }
-        h1, h2, h3, h4 { text-transform: uppercase; margin: 0; letter-spacing: 2px; font-weight: 700; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3 { margin: 0; font-weight: 600; letter-spacing: -0.5px; color: #fff; }
         a { text-decoration: none; transition: 0.3s; }
         ul { list-style: none; padding: 0; }
         
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 
-        /* HEADER / HERO SECTION */
+        /* --- 2. HEADER --- */
         header {
-            background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(3,3,3,1)), url('https://images.unsplash.com/photo-1614200187524-dc4b892acf16?q=80&w=1200&auto=format&fit=crop') center/cover;
-            height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-bottom: 1px solid #222;
+            min-height: 85vh; display: flex; flex-direction: column; justify-content: center;
+            align-items: center; text-align: center; padding: 20px;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 70%);
         }
-        .badge-premium { border: 1px solid var(--accent); color: var(--accent); padding: 8px 25px; font-size: 0.8rem; letter-spacing: 4px; margin-bottom: 25px; font-weight: bold; background: rgba(0,0,0,0.5); }
-        header h1 { font-size: 4rem; color: #fff; margin-bottom: 15px; text-shadow: 0 5px 15px rgba(0,0,0,0.8); }
-        header h1 span { color: var(--accent); }
-        .tagline { font-size: 1.2rem; color: #ccc; max-width: 700px; margin: 0 auto 40px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
-        
-        .hero-buttons { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
-        .btn-gold { background: var(--accent); color: #000; padding: 15px 40px; font-weight: bold; border-radius: 4px; text-transform: uppercase; box-shadow: 0 0 20px var(--accent-glow); font-size: 0.9rem; letter-spacing: 1px; }
-        .btn-gold:hover { background: #eac14d; transform: translateY(-3px); box-shadow: 0 0 30px rgba(212, 175, 55, 0.4); }
-        .btn-outline { background: rgba(0,0,0,0.5); border: 1px solid #fff; color: #fff; padding: 15px 40px; font-weight: bold; border-radius: 4px; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; }
-        .btn-outline:hover { background: #fff; color: #000; transform: translateY(-3px); }
 
-        section { padding: 100px 0; }
-        .section-header { text-align: center; margin-bottom: 70px; }
-        .section-header h2 { font-size: 2.8rem; color: #fff; margin-bottom: 15px; }
-        .section-header h2 span { color: var(--accent); }
-        .section-header p { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+        .logo-img { max-width: 160px; margin-bottom: 40px; filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.1)); }
+        .tagline { color: var(--accent-color); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 25px; font-weight: bold; }
+        h1 { font-size: 3.2rem; line-height: 1.2; margin-bottom: 25px; }
+        h1 span { color: var(--accent-color); font-style: italic; }
+        .sub-hero { font-size: 1.15rem; color: var(--sub-text); max-width: 600px; margin-bottom: 40px; }
 
-        /* GRILLES (Auto & Immo) */
-        .fleet-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; }
-        .car-card { background: var(--card-bg); border: 1px solid #1a1a1a; border-radius: 6px; overflow: hidden; transition: 0.4s; position: relative; }
-        .car-card:hover { border-color: var(--accent); transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
-        .car-img { width: 100%; height: 300px; object-fit: cover; border-bottom: 1px solid #1a1a1a; filter: contrast(1.1) brightness(0.9); }
-        .car-card:hover .car-img { filter: contrast(1.1) brightness(1); }
-        
-        .car-info { padding: 40px 30px; }
-        .car-title { font-size: 1.6rem; margin-bottom: 10px; color: #fff; }
-        .location-tag { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; display: block; letter-spacing: 1px; text-transform: uppercase; }
-        .no-caution { display: inline-block; background: rgba(212, 175, 55, 0.1); color: var(--accent); padding: 6px 15px; font-size: 0.8rem; border: 1px solid var(--accent); margin-bottom: 20px; font-weight: bold; letter-spacing: 1px; }
-        
-        .criteria-list { color: #aaa; font-size: 0.95rem; margin-bottom: 25px; padding-left: 0; line-height: 2; border-left: 2px solid #222; padding-left: 20px; }
-        .criteria-list li { display: flex; align-items: center; }
-        .criteria-list li span { color: var(--accent); margin-right: 10px; }
+        /* BOUTON PRINCIPAL (DORÉ) */
+        .cta-button {
+            background-color: var(--accent-color); color: #000; padding: 18px 45px;
+            font-size: 1.1rem; font-weight: 700; border-radius: 50px; display: inline-block;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.2);
+        }
+        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 0 40px rgba(212, 175, 55, 0.5); background-color: #eac14d; }
 
-        /* POLE FORMATION (BUSINESS) */
-        .academy-box { background: linear-gradient(145deg, #111, #050505); border: 1px solid #222; border-radius: 6px; padding: 60px; display: flex; flex-wrap: wrap; gap: 50px; align-items: center; transition: 0.4s; }
-        .academy-box:hover { border-color: var(--accent); }
-        .academy-content { flex: 1; min-width: 300px; }
-        .academy-content h3 { font-size: 2.5rem; margin-bottom: 25px; color: #fff; }
-        .academy-content h3 span { color: var(--accent); }
-        .academy-list li { margin-bottom: 18px; font-size: 1.1rem; color: #ccc; display: flex; align-items: center; }
-        .academy-list li::before { content: '■'; color: var(--accent); margin-right: 15px; font-size: 0.8rem; }
-        .academy-image { flex: 1; min-width: 300px; border-radius: 4px; overflow: hidden; height: 400px; }
-        .academy-image img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(80%) contrast(1.2); transition: 0.5s; }
-        .academy-box:hover .academy-image img { filter: grayscale(0%) contrast(1.1); }
+        /* --- 3. PORTFOLIO (4 SITES) --- */
+        .portfolio { padding: 80px 0; }
+        .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 60px; }
+        .section-title span { border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; }
 
-        /* CONTACT RAPIDE */
-        .contact-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-        .btn-wa { background: var(--whatsapp); color: #fff; padding: 15px; text-align: center; font-weight: bold; border-radius: 4px; letter-spacing: 1px; text-transform: uppercase; font-size: 0.85rem; }
-        .btn-wa:hover { background: #1ebe57; }
-        .btn-mail { background: var(--mail-bg); color: #fff; padding: 15px; text-align: center; font-weight: bold; border-radius: 4px; border: 1px solid #333; letter-spacing: 1px; text-transform: uppercase; font-size: 0.85rem; }
-        .btn-mail:hover { background: #222; border-color: #555; }
-        .btn-full { grid-column: 1 / -1; } /* Prend toute la largeur */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
 
-        footer { text-align: center; padding: 50px 20px; border-top: 1px solid #111; background: #000; color: #555; font-size: 0.85rem; letter-spacing: 1px; }
-        footer span { color: var(--accent); }
-        
+        .project-card { background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid #222; transition: transform 0.3s; }
+        .project-card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
+
+        .project-img-container { height: 250px; width: 100%; overflow: hidden; background-color: #222; position: relative; }
+        .project-img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .project-card:hover .project-img-container img { transform: scale(1.05); }
+
+        .project-info { padding: 25px; }
+        .tag { display: inline-block; background: #222; color: var(--accent-color); padding: 5px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: bold; margin-bottom: 15px; border: 1px solid #333; }
+        .live-link { color: var(--accent-color); font-weight: bold; font-size: 0.85rem; text-transform: uppercase; float: right; margin-top: 5px; }
+
+        /* --- 4. PRICING --- */
+        .pricing { padding: 80px 0 100px; }
+        .pricing-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+        .price-card { background: var(--card-bg); padding: 50px 30px; border-radius: 20px; width: 320px; border: 1px solid #333; display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; }
+        .price-highlight { border: 1px solid var(--accent-color); box-shadow: 0 0 30px rgba(212, 175, 55, 0.1); transform: scale(1.05); }
+        .price { font-size: 3rem; font-weight: 700; margin: 20px 0; color: #fff; }
+        .price span { font-size: 1rem; color: #888; font-weight: normal; }
+        .features-list { text-align: left; margin: 30px 0; color: #ccc; }
+        .features-list li { margin-bottom: 15px; font-size: 1rem; }
+
+        .btn-outline { display: block; border: 1px solid #fff; color: #fff; padding: 12px; border-radius: 50px; font-weight: bold; text-align: center; }
+        .btn-outline:hover { background: #fff; color: #000; }
+        .btn-full { display: block; background: var(--accent-color); color: #000; padding: 12px; border-radius: 50px; font-weight: bold; text-align: center; }
+        .btn-full:hover { background-color: #eac14d; }
+
+        footer { padding: 50px 0; text-align: center; color: #555; font-size: 0.8rem; border-top: 1px solid #222; }
+
         @media (max-width: 768px) {
-            header h1 { font-size: 2.8rem; }
-            .hero-buttons { flex-direction: column; width: 100%; }
-            .hero-buttons a { width: 100%; box-sizing: border-box; text-align: center; }
-            .contact-buttons { grid-template-columns: 1fr; }
-            .academy-box { padding: 30px; }
-            .academy-image { height: 250px; }
+            h1 { font-size: 2.5rem; }
+            .price-highlight { transform: scale(1); margin: 20px 0; }
         }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="container">
-        <div class="badge-premium">AGENCE INTERNATIONALE</div>
-        <h1>RM LOCATION <span>ZH</span></h1>
-        <p class="tagline">L'excellence automobile et immobilière. Plateforme de réservation haut de gamme et accompagnement business exclusif.</p>
-        <div class="hero-buttons">
-            <a href="#auto" class="btn-gold">Flotte Auto</a>
-            <a href="#immo" class="btn-outline">Pôle Immobilier</a>
-            <a href="#formation" class="btn-outline">Académie</a>
+    <header>
+        <div class="container">
+            <img src="logo.png" alt="Logo Yac Design" class="logo-img" onerror="this.style.display='none'">
+            
+            <div class="tagline">Studio Web pour Indépendants</div>
+            <h1>Sublimez votre activité<br>avec un <span>Site d'Exception</span>.</h1>
+            <p class="sub-hero">
+                Une présence en ligne haut de gamme pour votre business.
+                Sans frais cachés. Sans engagement.
+            </p>
+            <a href="https://ig.me/m/yac_design4" target="_blank" class="cta-button">DM "Je suis intéressé(e)" 📩</a>
         </div>
-    </div>
-</header>
+    </header>
 
-<section id="auto">
-    <div class="container">
-        <div class="section-header">
-            <h2>Pôle <span>Automobile</span></h2>
-            <p>Accédez à notre réseau de partenaires agréés. Des véhicules de prestige disponibles immédiatement, avec un service irréprochable.</p>
-        </div>
-        
-        <div class="fleet-grid">
-            <div class="car-card">
-                <img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=800&auto=format&fit=crop" alt="Véhicules Dubaï" class="car-img">
-                <div class="car-info">
-                    <h3 class="car-title">Flotte Dubaï</h3>
-                    <span class="location-tag">📍 Partenaires Émirats Arabes Unis</span>
-                    <span class="no-caution">🤝 LOCATION SANS CAUTION</span>
-                    <p style="color:#aaa; font-size:0.95rem; margin-bottom:25px;">Sélection de SUV hyper-sportifs et berlines de luxe pour dominer les routes de Dubaï.</p>
-                    
-                    <div class="contact-buttons">
-                        <a href="https://wa.me/971585689047?text=Bonjour%20RM%20Location%2C%20je%20suis%20int%C3%A9ress%C3%A9%28e%29%20par%20une%20location%20auto%20%C3%A0%20Duba%C3%AF.%0A%0A%F0%9F%93%85%20Dates%20%3A%20...%0A%F0%9F%9A%97%20V%C3%A9hicule%20%3A%20..." target="_blank" class="btn-wa">📱 Réserver (WA)</a>
-                        <a href="mailto:contact@rmlocationzh.com?subject=Demande%20Location%20-%20Dubaï&body=Bonjour%20RM%20Location%2C%0A%0AJe%20souhaite%20louer%20un%20v%C3%A9hicule%20%C3%A0%20Duba%C3%AF.%0A%0A-%20Dates%20exactes%20%3A%20%0A-%20V%C3%A9hicule%20souhait%C3%A9%20%3A%20%0A%0AMerci%20de%20me%20confirmer%20la%20disponibilit%C3%A9." class="btn-mail">✉️ Email</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="car-card">
-                <img src="https://images.unsplash.com/photo-1520031441872-265e4ff70366?q=80&w=800&auto=format&fit=crop" alt="Véhicules Marrakech" class="car-img">
-                <div class="car-info">
-                    <h3 class="car-title">Flotte Marrakech</h3>
-                    <span class="location-tag">📍 Partenaires Maroc</span>
-                    <span class="no-caution">🤝 LOCATION SANS CAUTION</span>
-                    <p style="color:#aaa; font-size:0.95rem; margin-bottom:25px;">Classe G, Range Rover et véhicules de prestige pour arpenter Marrakech avec élégance.</p>
-                    
-                    <div class="contact-buttons">
-                        <a href="https://wa.me/33759336987?text=Bonjour%20RM%20Location%2C%20je%20suis%20int%C3%A9ress%C3%A9%28e%29%20par%20une%20location%20auto%20%C3%A0%20Marrakech.%0A%0A%F0%9F%93%85%20Dates%20%3A%20...%0A%F0%9F%9A%97%20V%C3%A9hicule%20%3A%20..." target="_blank" class="btn-wa">📱 Réserver (WA)</a>
-                        <a href="mailto:contact@rmlocationzh.com?subject=Demande%20Location%20-%20Marrakech&body=Bonjour%20RM%20Location%2C%0A%0AJe%20souhaite%20louer%20un%20v%C3%A9hicule%20%C3%A0%20Marrakech.%0A%0A-%20Dates%20exactes%20%3A%20%0A-%20V%C3%A9hicule%20souhait%C3%A9%20%3A%20%0A%0AMerci%20de%20me%20confirmer%20la%20disponibilit%C3%A9." class="btn-mail">✉️ Email</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="immo" style="background-color: #080808; border-top: 1px solid #111; border-bottom: 1px solid #111;">
-    <div class="container">
-        <div class="section-header">
-            <h2>Pôle <span>Immobilier</span></h2>
-            <p>Villas de rêve et appartements de haut standing. Confiez-nous vos exigences, nous sélectionnons le bien parfait.</p>
-        </div>
-        
-        <div class="fleet-grid">
-            <div class="car-card" style="grid-column: 1 / -1; display: flex; flex-wrap: wrap; background: #0f0f0f;">
-                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1200&auto=format&fit=crop" alt="Villa de luxe" style="flex: 1; min-width: 300px; object-fit: cover; border-right: 1px solid #1a1a1a;">
+    <section class="portfolio">
+        <div class="container">
+            <h2 class="section-title"><span>Mes Réalisations</span></h2>
+            
+            <div class="portfolio-grid">
                 
-                <div class="car-info" style="flex: 1; min-width: 300px; padding: 50px;">
-                    <h3 class="car-title" style="font-size: 2rem;">Villas & Appartements</h3>
-                    <span class="location-tag">📍 Réseau Dubaï & Marrakech</span>
-                    <p style="color:#ddd; margin-bottom:25px; font-size: 1.05rem;">Envoyez-nous vos critères en un clic. Notre équipe vous fera une sélection sur-mesure des biens correspondants.</p>
-                    
-                    <ul class="criteria-list">
-                        <li><span>📅</span> Vos dates exactes</li>
-                        <li><span>👥</span> Le nombre de personnes</li>
-                        <li><span>🛏️</span> Le nombre de chambres</li>
-                        <li><span>⏱️</span> La durée du séjour</li>
-                        <li><span>💵</span> Votre budget alloué</li>
-                    </ul>
-                    
-                    <div class="contact-buttons">
-                        <a href="https://wa.me/33759336987?text=Bonjour%2C%20je%20recherche%20un%20bien%20%28Villa%2FAppartement%29.%0A%0A%F0%9F%93%85%20Dates%20%3A%20...%0A%F0%9F%91%A5%20Personnes%20%3A%20...%0A%F0%9F%9B%8F%EF%B8%8F%20Chambres%20%3A%20...%0A%E2%8F%B1%EF%B8%8F%20Dur%C3%A9e%20%3A%20...%0A%F0%9F%92%B5%20Budget%20%3A%20..." target="_blank" class="btn-wa btn-full" style="padding: 18px; font-size: 1rem;">📱 Soumettre mes critères (WhatsApp)</a>
+                <div class="project-card">
+                    <div class="project-img-container">
+                        <img src="hl.jpg" alt="Site HL Beauty Bar" onerror="this.src='https://via.placeholder.com/800x500/222/D4AF37?text=HL+Beauty'">
+                    </div>
+                    <div class="project-info">
+                        <a href="https://hlbeautybar.netlify.app/" target="_blank" class="live-link">Voir le site ↗</a>
+                        <span class="tag">BEAUTÉ & INSTITUT</span>
+                        <h3>HL Beauty Bar</h3>
+                        <p style="color:#aaa; font-size:0.9rem; margin-bottom:20px;">
+                            Site vitrine Premium avec intégration de réservation et gestion des prestations esthétiques.
+                        </p>
                     </div>
                 </div>
+
+                <div class="project-card">
+                    <div class="project-img-container">
+                        <img src="lahyss.jpg" alt="Site Lahyss Beauty" onerror="this.src='https://via.placeholder.com/800x500/222/D4AF37?text=Lahyss+Beauty'">
+                    </div>
+                    <div class="project-info">
+                        <a href="https://lahyss-beauty.pages.dev/" target="_blank" class="live-link">Voir le site ↗</a>
+                        <span class="tag">BEAUTÉ & CILS</span>
+                        <h3>Lahyss Beauty</h3>
+                        <p style="color:#aaa; font-size:0.9rem; margin-bottom:20px;">
+                            Portfolio visuel élégant, mise en avant des tarifs et centralisation des prises de rendez-vous.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-img-container">
+                        <img src="lb.jpg" alt="Site LB Location" onerror="this.src='https://via.placeholder.com/800x500/222/D4AF37?text=LB+Location'">
+                    </div>
+                    <div class="project-info">
+                        <a href="https://lblocation.netlify.app/" target="_blank" class="live-link">Voir le site ↗</a>
+                        <span class="tag">LOCATION AUTO</span>
+                        <h3>LB Location</h3>
+                        <p style="color:#aaa; font-size:0.9rem; margin-bottom:20px;">
+                            Plateforme de réservation de véhicules avec affichage clair des cautions et conditions de location.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-img-container">
+                        <img src="sun.jpg" alt="Site Sun Creation" onerror="this.src='https://via.placeholder.com/800x500/222/D4AF37?text=Sun+Creation'">
+                    </div>
+                    <div class="project-info">
+                        <a href="https://sucrea.pages.dev/roses" target="_blank" class="live-link">Voir le site ↗</a>
+                        <span class="tag">E-COMMERCE & CRÉATION</span>
+                        <h3>Sun Creation</h3>
+                        <p style="color:#aaa; font-size:0.9rem; margin-bottom:20px;">
+                            Boutique en ligne minimaliste et élégante, conçue pour mettre en valeur des créations uniques.
+                        </p>
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section id="formation">
-    <div class="container">
-        <div class="section-header">
-            <h2>Pôle <span>Académie</span></h2>
-            <p>Ne vous contentez pas de louer, devenez le propriétaire. Nous vous formons de A à Z pour lancer un empire automobile.</p>
-        </div>
+    <section class="pricing">
+        <div class="container">
+            <h2 class="section-title"><span>Mes Offres</span></h2>
+            <div class="pricing-grid">
+                
+                <div class="price-card">
+                    <div>
+                        <h3 style="color:var(--accent-color)">Site Service</h3>
+                        <div class="price">9,99€<span>/mois</span></div>
+                        <ul class="features-list">
+                            <li>✔ <strong>Idéal Prestataires</strong></li>
+                            <li>✔ Présentation & Tarifs</li>
+                            <li>✔ Boutons de Réservation</li>
+                            <li>✔ Design Premium Mobile</li>
+                        </ul>
+                    </div>
+                    <a href="https://ig.me/m/yac_design4" target="_blank" class="btn-outline">Je suis intéressé(e)</a>
+                </div>
 
-        <div class="academy-box">
-            <div class="academy-content">
-                <h3>Devenez <span>Indépendant</span></h3>
-                <p style="color: #aaa; margin-bottom: 25px; font-size: 1.1rem;">Rejoignez l'élite. Apprenez les stratégies exactes qui nous ont permis de nous développer à l'international.</p>
-                <ul class="academy-list">
-                    <li><strong>Business Plan :</strong> Stratégie de rentabilité et scaling.</li>
-                    <li><strong>Réseau Exclusif :</strong> Accès direct à nos fournisseurs.</li>
-                    <li><strong>Coaching Personnel :</strong> Accompagnement téléphonique 1-on-1.</li>
-                </ul>
-                <br>
-                <a href="https://wa.me/33759336987?text=Bonjour%20RM%20Location%2C%20je%20souhaite%20des%20informations%20sur%20la%20Formation%20Business%20pour%20lancer%20mon%20agence." target="_blank" class="btn-gold" style="display:inline-block; margin-top: 10px;">💬 Postuler à la formation</a>
+                <div class="price-card price-highlight">
+                    <div>
+                        <h3 style="color:#fff">Site Sur-Mesure</h3>
+                        <div class="price" style="color:var(--accent-color)">25,99€<span>/mois</span></div>
+                        <ul class="features-list">
+                            <li>✔ <strong>Idéal Business & Boutiques</strong></li>
+                            <li>✔ Protection Juridique (CGV)</li>
+                            <li>✔ Optimisation Conversions</li>
+                            <li>✔ Hébergement & Maintenance inclus</li>
+                        </ul>
+                    </div>
+                    <a href="https://ig.me/m/yac_design4" target="_blank" class="btn-full">Lancer mon projet 🚀</a>
+                </div>
+
             </div>
-            <div class="academy-image">
-                <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=800&auto=format&fit=crop" alt="Coaching Business">
-            </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<footer>
-    <div class="container">
-        <p>© 2026 RM Location ZH. Tous droits réservés.</p>
-        <p style="color:#333; margin-top: 10px;">Plateforme sécurisée développée par <span>Yac Design</span>.</p>
-    </div>
-</footer>
+    <footer>
+        <div class="container">
+            <p>© 2026 - Yac Design. Tous droits réservés.</p>
+        </div>
+    </footer>
 
 </body>
 </html>
