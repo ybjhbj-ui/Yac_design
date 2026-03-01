@@ -45,7 +45,9 @@
         .char-wrapper { display: inline-block; overflow: hidden; vertical-align: bottom; }
         .char { display: inline-block; transform: translateY(100%); will-change: transform; }
 
-        .magnetic-btn { display: inline-block; position: relative; will-change: transform; cursor: pointer; }
+        /* Le wrapper magnétique a un padding pour éviter les sauts au survol */
+        .magnetic-wrap { display: inline-block; padding: 10px; cursor: pointer; }
+        .magnetic-btn { display: inline-block; position: relative; will-change: transform; pointer-events: none; }
         
         .border-glow {
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -60,7 +62,6 @@
         .marquee-content span.highlight { color: #D4AF37; }
         @keyframes marquee { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
 
-        /* Objets vivants CSS */
         .db-disc { width: 60px; height: 16px; border: 1px solid #D4AF37; border-radius: 50%; background: rgba(212,175,55,0.05); position: absolute; left: 50%; transform: translateX(-50%); box-shadow: 0 5px 15px rgba(212,175,55,0.1); }
         .radar-box { width: 70px; height: 70px; border-radius: 50%; border: 1px dashed rgba(255,255,255,0.2); position: relative; display: flex; justify-content: center; align-items: center;}
         .radar-core { width: 10px; height: 10px; background: #D4AF37; border-radius: 50%; box-shadow: 0 0 10px #D4AF37;}
@@ -81,12 +82,9 @@
         }
         @keyframes shine { 0% { left: -150%; } 20% { left: 200%; } 100% { left: 200%; } }
 
-        /* Conteneurs 3D isolés */
         .portal-3d { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 
-        /* ==========================================
-           MODE HACKER 2.0 CSS
-           ========================================== */
+        /* MODE HACKER */
         #hacker-terminal {
             position: fixed; inset: 0; background: #050505; z-index: 99999;
             color: #00ff41; font-family: 'Fira Code', monospace; padding: 30px;
@@ -122,15 +120,7 @@
     <div class="crt-overlay" id="crt-overlay"></div>
 
     <nav class="fixed w-full z-50 top-0 py-6 px-8 md:px-16 flex justify-between items-center bg-luxe-black/80 backdrop-blur-md border-b border-white/5">
-        <div class="flex items-center gap-4">
-            <div id="logo-trigger" class="font-heading text-xl font-bold tracking-widest text-white cursor-pointer select-none">YAC<span class="text-luxe-gold">.</span></div>
-            <div class="hidden md:flex items-center text-[9px] font-mono text-luxe-gold border border-luxe-gold/30 px-3 py-1.5 rounded-sm bg-luxe-gold/10 animate-pulse tracking-widest">
-                >_ TAPEZ "CODE"
-            </div>
-            <div class="flex md:hidden items-center text-[9px] font-mono text-luxe-gold border border-luxe-gold/30 px-2 py-1 rounded-sm bg-luxe-gold/10 animate-pulse tracking-widest">
-                >_ TAPPEZ 3X ICI
-            </div>
-        </div>
+        <div class="font-heading text-xl font-bold tracking-widest text-white cursor-pointer select-none" onclick="window.scrollTo(0,0)">YAC<span class="text-luxe-gold">.</span></div>
         <a href="https://ig.me/m/yac_design4" target="_blank" class="text-xs uppercase tracking-[0.2em] hover:text-luxe-gold transition">Contact</a>
     </nav>
 
@@ -149,11 +139,11 @@
             Exit WordPress et les sites lents. J'élabore des architectures sur-mesure pour les indépendants ambitieux. Réservations, paiements, bases de données : vous dormez, votre site encaisse.
         </p>
         
-        <div class="opacity-0 hero-elem magnetic-wrap">
-            <a href="https://ig.me/m/yac_design4" target="_blank" class="magnetic-btn bg-luxe-gold text-luxe-black px-10 py-5 rounded-full font-bold uppercase tracking-widest text-xs flex items-center gap-3 shadow-[0_0_30px_rgba(212,175,55,0.3)] hover:shadow-[0_0_50px_rgba(212,175,55,0.6)] transition-shadow duration-300">
+        <a href="#investissement" class="opacity-0 hero-elem magnetic-wrap">
+            <div class="magnetic-btn bg-luxe-gold text-luxe-black px-10 py-5 rounded-full font-bold uppercase tracking-widest text-xs flex items-center gap-3 shadow-[0_0_30px_rgba(212,175,55,0.3)] hover:shadow-[0_0_50px_rgba(212,175,55,0.6)] transition-shadow duration-300">
                 Lancer mon projet <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-            </a>
-        </div>
+            </div>
+        </a>
     </header>
 
     <div class="marquee-container my-10 gs-reveal relative z-10">
@@ -252,7 +242,7 @@
         </div>
     </section>
 
-    <section class="py-32 px-4 relative border-t border-white/5 z-10 overflow-hidden">
+    <section id="investissement" class="py-32 px-4 relative border-t border-white/5 z-10 overflow-hidden">
         <div class="max-w-6xl mx-auto relative z-10 w-full flex flex-col items-center">
             
             <h2 class="font-heading text-3xl md:text-6xl uppercase text-center mb-4 split-text drop-shadow-[0_0_20px_rgba(212,175,55,0.5)]" data-split="L'Investissement">L'Investissement</h2>
@@ -263,7 +253,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 w-full">
-                <div class="price-card bg-luxe-dark border-glow rounded-3xl p-10 flex flex-col justify-between gs-reveal">
+                <div class="price-card bg-luxe-dark/80 backdrop-blur-xl border border-white/10 rounded-3xl p-10 flex flex-col justify-between gs-reveal">
                     <div>
                         <h3 class="font-heading text-xl text-white mb-2">Site Vitrine</h3>
                         <p class="text-luxe-gray text-sm mb-8">La présence digitale parfaite pour démarrer.</p>
@@ -277,7 +267,7 @@
                     <a href="https://ig.me/m/yac_design4" target="_blank" class="block w-full text-center border border-white/20 hover:border-white py-4 rounded-full text-xs uppercase tracking-widest transition duration-300">Je suis intéressé(e)</a>
                 </div>
 
-                <div class="price-card premium-shine bg-gradient-to-b from-[#1a1811] to-luxe-dark border border-luxe-gold/40 shadow-[0_0_50px_rgba(212,175,55,0.1)] rounded-3xl p-10 flex flex-col justify-between gs-reveal">
+                <div class="price-card premium-shine bg-gradient-to-b from-[#1a1811]/90 to-luxe-dark/90 backdrop-blur-xl border border-luxe-gold/50 shadow-[0_0_50px_rgba(212,175,55,0.2)] rounded-3xl p-10 flex flex-col justify-between gs-reveal">
                     <div class="absolute top-0 right-0 bg-luxe-gold text-black text-[9px] font-bold uppercase tracking-widest py-1 px-4 rounded-bl-lg z-10">Le Produit Phare</div>
                     <div class="relative z-10">
                         <h3 class="font-heading text-2xl text-white mb-2">Logiciel Exclusif <span class="text-luxe-gold">*</span></h3>
@@ -290,13 +280,26 @@
                             <li class="flex items-center gap-3"><svg class="w-5 h-5 text-luxe-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Notifications Telegram temps réel</li>
                         </ul>
                     </div>
-                    <a href="https://ig.me/m/yac_design4" target="_blank" class="relative z-10 block w-full text-center bg-luxe-gold text-black py-4 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white transition duration-300">Lancer mon projet 🚀</a>
+                    <a href="https://ig.me/m/yac_design4" target="_blank" class="relative z-10 block w-full text-center bg-luxe-gold text-black py-4 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white transition duration-300 shadow-[0_0_20px_rgba(212,175,55,0.4)]">Lancer mon projet 🚀</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="pt-32 pb-12 text-center border-t border-white/5 relative z-10 overflow-hidden">
+    <section class="py-24 px-4 relative border-t border-white/5 z-10 overflow-hidden flex flex-col items-center justify-center min-h-[60vh] md:min-h-[80vh]">
+        <div class="absolute inset-0 z-0 pointer-events-none opacity-60" id="canvas-gateway"></div>
+        
+        <div class="relative z-10 flex flex-col items-center mt-auto pb-12 gs-reveal">
+            <h2 class="font-mono text-white/50 text-xs md:text-sm tracking-[0.5em] mb-6 uppercase text-center">Accès Système Restreint</h2>
+            <div class="magnetic-wrap" id="btn-hacker-trigger">
+                <div class="magnetic-btn border border-luxe-gold text-luxe-gold px-8 md:px-12 py-4 rounded-full font-mono text-xs md:text-sm uppercase tracking-[0.3em] hover:bg-luxe-gold hover:text-black transition-all duration-300 shadow-[0_0_15px_rgba(212,175,55,0.2)] hover:shadow-[0_0_30px_rgba(212,175,55,0.6)]">
+                    Initier la Séquence
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="pt-24 pb-12 text-center border-t border-white/5 relative z-10 overflow-hidden">
         <div class="gs-reveal mb-12">
             <h2 class="font-heading text-[15vw] leading-none text-white/5 tracking-tighter pointer-events-none select-none">YAC DESIGN</h2>
         </div>
@@ -331,12 +334,15 @@
             windowHalfY = window.innerHeight / 2;
         });
 
-        // 2. BOUTON MAGNÉTIQUE & TEXTES SPLIT
+        // 2. BOUTON MAGNÉTIQUE CORRIGÉ (Doux, ne fuit pas la souris)
         document.querySelectorAll('.magnetic-wrap').forEach((magnet) => {
             const btn = magnet.querySelector('.magnetic-btn');
             magnet.addEventListener('mousemove', (e) => {
                 const pos = magnet.getBoundingClientRect();
-                gsap.to(btn, { x: (e.pageX - pos.left - pos.width/2)*0.3, y: (e.pageY - pos.top - pos.height/2)*0.3, duration: 1, ease: "power3.out" });
+                // Facteur réduit (0.1) et on utilise clientX/clientY pour éviter le bug de "fuite"
+                const x = (e.clientX - pos.left - pos.width/2) * 0.1; 
+                const y = (e.clientY - pos.top - pos.height/2) * 0.1;
+                gsap.to(btn, { x: x, y: y, duration: 1, ease: "power3.out" });
             });
             magnet.addEventListener('mouseleave', () => gsap.to(btn, { x: 0, y: 0, duration: 1, ease: "elastic.out(1, 0.3)" }));
         });
@@ -367,20 +373,22 @@
         gsap.utils.toArray('.float-num').forEach(num => gsap.to(num, { y: -15, yoyo: true, repeat: -1, duration: 2+Math.random(), ease: "sine.inOut" }));
         gsap.utils.toArray('.price-card').forEach((card, i) => gsap.to(card, { y: -10, yoyo: true, repeat: -1, duration: 3+i, ease: "sine.inOut" }));
 
-        // Anim Mécanique
         gsap.to(".db-disc", { y: -8, duration: 1.5, stagger: 0.2, yoyo: true, repeat: -1, ease: "sine.inOut", backgroundColor: "rgba(212,175,55,0.2)", boxShadow: "0 0 15px rgba(212,175,55,0.4)" });
         gsap.timeline({repeat: -1}).to("#pulse-dot", { x: -35, y: -35, duration: 0.8, ease: "power1.inOut" }).to("#pulse-dot", { opacity: 0, duration: 0.1 }).set("#pulse-dot", { x: 0, y: 0 }).to("#pulse-dot", { opacity: 1, duration: 0.1 }).to("#pulse-dot", { x: 35, y: -25, duration: 0.8, ease: "power1.inOut" }).to("#pulse-dot", { opacity: 0, duration: 0.1 }).set("#pulse-dot", { x: 0, y: 0 }).to("#pulse-dot", { opacity: 1, duration: 0.1 });
 
-
         // ==========================================
-        // 4. QUATRE SCÈNES 3D (Portails + Horloge Prix)
+        // 4. SCÈNES 3D
         // ==========================================
         function create3DScene(containerId, geoType) {
             const container = document.getElementById(containerId);
             if(!container) return null;
             const scene = new THREE.Scene();
             
-            const cameraZ = (geoType === 'clock') ? 55 : ((geoType === 'sphere') ? 50 : 48);
+            let cameraZ = 48;
+            if(geoType === 'clock') cameraZ = 55;
+            if(geoType === 'sphere') cameraZ = 50;
+            if(geoType === 'gateway') cameraZ = 35;
+
             const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
             camera.position.z = cameraZ; 
 
@@ -393,35 +401,36 @@
             
             if(geoType === 'clock') {
                 const clockGroup = new THREE.Group();
-
-                // Cadran Extérieur
                 const dialGeo = new THREE.RingGeometry(22, 23, 60);
                 const dialMat = new THREE.PointsMaterial({ color: 0xD4AF37, size: 0.15, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
                 clockGroup.add(new THREE.Points(dialGeo, dialMat));
 
-                // Anneau Intérieur
                 const innerGeo = new THREE.RingGeometry(18, 18.5, 80);
                 const innerMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
                 clockGroup.add(new THREE.Points(innerGeo, innerMat));
 
-                // Aiguille Rapide (Minutes)
                 const minGeo = new THREE.PlaneGeometry(0.2, 19);
-                minGeo.translate(0, 9.5, 0); // Décaler le point de rotation
-                const minMat = new THREE.PointsMaterial({ color: 0xD4AF37, size: 0.4 });
-                clockGroup.add(new THREE.Points(minGeo, minMat));
+                minGeo.translate(0, 9.5, 0);
+                clockGroup.add(new THREE.Points(minGeo, new THREE.PointsMaterial({ color: 0xD4AF37, size: 0.4 })));
 
-                // Aiguille Lente (Heures)
                 const hrGeo = new THREE.PlaneGeometry(0.4, 12);
                 hrGeo.translate(0, 6, 0);
-                const hrMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.4 });
-                clockGroup.add(new THREE.Points(hrGeo, hrMat));
+                clockGroup.add(new THREE.Points(hrGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.4 })));
 
-                // Centre
-                const centerGeo = new THREE.CircleGeometry(1.5, 32);
-                clockGroup.add(new THREE.Points(centerGeo, new THREE.PointsMaterial({ color: 0xD4AF37, size: 0.2 })));
-
+                clockGroup.add(new THREE.Points(new THREE.CircleGeometry(1.5, 32), new THREE.PointsMaterial({ color: 0xD4AF37, size: 0.2 })));
                 mesh = clockGroup;
             } 
+            else if(geoType === 'gateway') {
+                const gateGroup = new THREE.Group();
+                const coreGeo = new THREE.IcosahedronGeometry(8, 1);
+                const coreMat = new THREE.MeshBasicMaterial({ color: 0xD4AF37, wireframe: true, transparent: true, opacity: 0.4 });
+                gateGroup.add(new THREE.Mesh(coreGeo, coreMat));
+
+                const outerGeo = new THREE.IcosahedronGeometry(12, 2);
+                const outerMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+                gateGroup.add(new THREE.Points(outerGeo, outerMat));
+                mesh = gateGroup;
+            }
             else {
                 let geo, mat = new THREE.PointsMaterial({ color: 0xD4AF37, size: 0.15, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
                 if(geoType === 'torus') { geo = new THREE.TorusKnotGeometry(12, 3, 200, 30); } 
@@ -445,7 +454,8 @@
             create3DScene('canvas-torus', 'torus'), 
             create3DScene('canvas-sphere', 'sphere'), 
             create3DScene('canvas-wave', 'wave'),
-            create3DScene('canvas-clock', 'clock') 
+            create3DScene('canvas-clock', 'clock'),
+            create3DScene('canvas-gateway', 'gateway')
         ];
         
         let clockTime = new THREE.Clock();
@@ -462,9 +472,14 @@
                     sys.mesh.children[1].rotation.z += 0.002; 
                     sys.mesh.children[2].rotation.z = -elapsedTime * 0.8; 
                     sys.mesh.children[3].rotation.z = -elapsedTime * 0.06; 
-
                     sys.mesh.rotation.x = 0.2 + Math.sin(elapsedTime * 0.3) * 0.1;
                     sys.mesh.rotation.y = Math.cos(elapsedTime * 0.2) * 0.1;
+                }
+                else if(sys.type === 'gateway') {
+                    sys.mesh.rotation.y += 0.004;
+                    sys.mesh.rotation.z -= 0.002;
+                    const scale = 1 + Math.sin(elapsedTime * 2) * 0.05;
+                    sys.mesh.scale.set(scale, scale, scale);
                 }
                 else if(sys.type === 'torus') { sys.mesh.rotation.y += 0.003; sys.mesh.rotation.x += 0.001; } 
                 else if(sys.type === 'sphere') { sys.mesh.rotation.y -= 0.002; sys.mesh.rotation.z -= 0.001; } 
@@ -494,16 +509,15 @@
         });
 
         // ==========================================
-        // 5. MODE HACKER 2.0 
+        // 5. MODE HACKER 2.0 (NOUVELLES COMMANDES)
         // ==========================================
         const terminal = document.getElementById('hacker-terminal');
         const crt = document.getElementById('crt-overlay');
         const termOutput = document.getElementById('terminal-output');
         const termInput = document.getElementById('terminal-input');
         const inputLine = document.getElementById('input-line');
+        const btnTrigger = document.getElementById('btn-hacker-trigger');
         
-        let typedKeys = "";
-        let tapCount = 0;
         let isHackerActive = false;
         let isTyping = false; 
 
@@ -522,11 +536,16 @@
         async function bootSequence() {
             isHackerActive = true;
             isTyping = true;
+            
+            gsap.to(btnTrigger, { scale: 0.9, duration: 0.2 });
+            await new Promise(r => setTimeout(r, 200));
+
             terminal.style.display = 'flex';
             crt.style.display = 'block';
             document.body.style.overflow = 'hidden';
             termOutput.innerHTML = '';
             inputLine.style.display = 'none';
+            gsap.to(btnTrigger, { scale: 1, duration: 0.2 });
 
             await typeLine("YAC_OS v2.0.4 - SYSTEM BOOT...", 30);
             await new Promise(r => setTimeout(r, 400));
@@ -547,22 +566,9 @@
             termInput.focus();
         }
 
-        window.addEventListener('keydown', (e) => {
-            if(isHackerActive) {
-                if(e.key !== 'Enter') termInput.focus();
-                return;
-            }
-            typedKeys += e.key.toUpperCase();
-            if(typedKeys.includes("CODE")) { bootSequence(); typedKeys = ""; }
-            if(typedKeys.length > 10) typedKeys = typedKeys.slice(-10);
-        });
-
-        document.getElementById('logo-trigger').addEventListener('touchstart', (e) => {
+        btnTrigger.addEventListener('click', (e) => {
             e.preventDefault();
-            if(isHackerActive) return;
-            tapCount++;
-            if(tapCount >= 3) { bootSequence(); tapCount = 0; }
-            setTimeout(() => tapCount = 0, 1500);
+            if(!isHackerActive) bootSequence();
         });
 
         termInput.addEventListener('keydown', async (e) => {
@@ -580,11 +586,12 @@
 
                 if(cmd === 'help') {
                     await typeLine("Commandes système :");
-                    await typeLine("- prix    : Dévoile les tarifs réels de l'agence");
-                    await typeLine("- stack   : Liste les technologies utilisées");
-                    await typeLine("- whoami  : Identité du créateur");
-                    await typeLine("- clear   : Nettoie l'écran");
-                    await typeLine("- exit    : Ferme le terminal");
+                    await typeLine("- prix         : Dévoile les tarifs réels de l'agence");
+                    await typeLine("- stack        : Liste les technologies utilisées");
+                    await typeLine("- whoami       : Identité du créateur");
+                    await typeLine("- start        : Démarrer un projet (Contact direct)");
+                    await typeLine("- clear        : Nettoie l'écran");
+                    await typeLine("- exit         : Ferme le terminal");
                 } 
                 else if(cmd === 'prix') {
                     await typeLine("ANALYSE DES PRIX EN COURS...", 20);
@@ -604,6 +611,13 @@
                     await typeLine("Nom de code : YACINE.");
                     await typeLine("Rôle : Architecte Logiciel.");
                     await typeLine("Objectif : Tuer la lenteur du web et remplacer WordPress par de l'ingénierie pure.");
+                }
+                else if(cmd === 'start' || cmd === 'booking' || cmd === 'reservation') {
+                    await typeLine("INITIATION DU PROTOCOLE DE CONTACT...", 20, "text-luxe-gold");
+                    await new Promise(r => setTimeout(r, 600));
+                    await typeLine("Ouverture du canal de communication sécurisé (Instagram)...", 10);
+                    await new Promise(r => setTimeout(r, 800));
+                    window.open('https://ig.me/m/yac_design4', '_blank');
                 }
                 else if(cmd === 'clear') {
                     termOutput.innerHTML = '';
