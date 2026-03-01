@@ -81,16 +81,6 @@
 
         .faq-content { height: 0; opacity: 0; overflow: hidden; }
 
-        /* Conteneurs 3D isolés */
-        .portal-3d {
-            position: absolute; inset: 0; z-index: 0; pointer-events: none;
-        }
-        .glass-panel {
-            background: rgba(10, 10, 10, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
     </style>
 </head>
 <body class="font-sans relative">
@@ -134,7 +124,7 @@
     </div>
 
     <section class="py-32 px-4 md:px-12 max-w-[1600px] mx-auto relative z-10">
-        <div class="text-center mb-16">
+        <div class="text-center mb-20">
             <h2 class="font-heading text-4xl md:text-6xl uppercase text-white mb-6 drop-shadow-2xl gs-reveal">
                 L'Immersion <span class="text-luxe-gold">Absolue</span>
             </h2>
@@ -143,29 +133,35 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-auto lg:h-[600px]">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
             
-            <div class="relative rounded-3xl overflow-hidden h-[400px] lg:h-full border border-white/10 group gs-reveal">
-                <div id="canvas-torus" class="portal-3d"></div>
-                <div class="absolute bottom-6 left-6 right-6 glass-panel p-6 rounded-2xl transition-transform duration-500 group-hover:-translate-y-2 z-10">
-                    <h3 class="font-heading text-lg text-luxe-gold mb-2 uppercase">L'Architecture</h3>
-                    <p class="text-gray-300 text-xs font-light leading-relaxed">Une structure de code complexe et parfaitement entrelacée. Comme ce Tore, chaque fonction de votre site est connectée avec précision.</p>
+            <div class="flex flex-col gap-6 group gs-reveal">
+                <div class="relative w-full h-[350px] lg:h-[400px] rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-b from-transparent to-white/5 transition-colors duration-500 group-hover:border-luxe-gold/30">
+                    <div id="canvas-torus" class="absolute inset-0 z-0 pointer-events-none"></div>
+                </div>
+                <div class="px-2 transition-transform duration-500 group-hover:translate-x-2">
+                    <h3 class="font-heading text-xl text-luxe-gold mb-3 uppercase">L'Architecture</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">Une structure de code complexe et parfaitement entrelacée. Comme ce Tore mathématique, chaque fonction de votre site est connectée avec une précision absolue.</p>
                 </div>
             </div>
 
-            <div class="relative rounded-3xl overflow-hidden h-[400px] lg:h-full border border-white/10 group gs-reveal" data-delay="0.2">
-                <div id="canvas-sphere" class="portal-3d"></div>
-                <div class="absolute bottom-6 left-6 right-6 glass-panel p-6 rounded-2xl transition-transform duration-500 group-hover:-translate-y-2 z-10">
-                    <h3 class="font-heading text-lg text-luxe-gold mb-2 uppercase">La Base de Données</h3>
-                    <p class="text-gray-300 text-xs font-light leading-relaxed">Un noyau central robuste. Des milliers de données clients et stocks gérées en temps réel via Supabase, illustrées par ce réseau de particules.</p>
+            <div class="flex flex-col gap-6 group gs-reveal" data-delay="0.2">
+                <div class="relative w-full h-[350px] lg:h-[400px] rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-b from-transparent to-white/5 transition-colors duration-500 group-hover:border-luxe-gold/30">
+                    <div id="canvas-sphere" class="absolute inset-0 z-0 pointer-events-none"></div>
+                </div>
+                <div class="px-2 transition-transform duration-500 group-hover:translate-x-2">
+                    <h3 class="font-heading text-xl text-luxe-gold mb-3 uppercase">La Base de Données</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">Un noyau central robuste. Des milliers de données clientes et stocks gérées en temps réel via Supabase, illustrées par ce réseau impénétrable de particules.</p>
                 </div>
             </div>
 
-            <div class="relative rounded-3xl overflow-hidden h-[400px] lg:h-full border border-white/10 group gs-reveal" data-delay="0.4">
-                <div id="canvas-wave" class="portal-3d"></div>
-                <div class="absolute bottom-6 left-6 right-6 glass-panel p-6 rounded-2xl transition-transform duration-500 group-hover:-translate-y-2 z-10">
-                    <h3 class="font-heading text-lg text-luxe-gold mb-2 uppercase">Le Flux Financier</h3>
-                    <p class="text-gray-300 text-xs font-light leading-relaxed">Une expérience utilisateur fluide et sans accroc. De la réservation jusqu'à la caution Stripe, l'argent circule comme une onde parfaite.</p>
+            <div class="flex flex-col gap-6 group gs-reveal" data-delay="0.4">
+                <div class="relative w-full h-[350px] lg:h-[400px] rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-b from-transparent to-white/5 transition-colors duration-500 group-hover:border-luxe-gold/30">
+                    <div id="canvas-wave" class="absolute inset-0 z-0 pointer-events-none"></div>
+                </div>
+                <div class="px-2 transition-transform duration-500 group-hover:translate-x-2">
+                    <h3 class="font-heading text-xl text-luxe-gold mb-3 uppercase">Le Flux Financier</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">Une expérience utilisateur sans accroc. De la sélection à la caution Stripe, l'argent et l'information circulent de manière aussi fluide qu'une onde.</p>
                 </div>
             </div>
 
@@ -452,7 +448,7 @@
         });
 
         // ==========================================
-        // 4. TROIS SCÈNES THREE.JS MULTIPLES & CONTENUES
+        // 4. TROIS SCÈNES THREE.JS (DANS LEURS CADRES PROPRES)
         // ==========================================
         
         function create3DScene(containerId, geoType) {
@@ -461,9 +457,6 @@
 
             const scene = new THREE.Scene();
             
-            // Correction de contenance : On recule la caméra (Z-Factor) 
-            // pour s'assurer que l'objet reste bien à l'intérieur de sa boîte.
-            // Tore & Vague: 48, Sphère: 50.
             const cameraZ = (geoType === 'sphere') ? 50 : 48;
             const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
             camera.position.z = cameraZ; 
@@ -508,7 +501,7 @@
             return { scene, camera, renderer, mesh, container, type: geoType };
         }
 
-        // Initialisation des 3 portails
+        // Initialisation
         const scenes = [
             create3DScene('canvas-torus', 'torus'),
             create3DScene('canvas-sphere', 'sphere'),
@@ -540,7 +533,6 @@
                     sys.mesh.rotation.z += 0.001;
                 }
 
-                // Parallax contenu (X*15 -> X*10 pour plus de contenance)
                 sys.camera.position.x += (targetX * 10 - sys.camera.position.x) * 0.05;
                 sys.camera.position.y += (-targetY * 10 - sys.camera.position.y) * 0.05;
                 sys.camera.lookAt(sys.scene.position);
