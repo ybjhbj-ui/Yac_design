@@ -6,7 +6,7 @@
     <title>Yac Design | Architecte Web & Logiciels Sur-Mesure</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
@@ -19,10 +19,12 @@
                         'luxe-dark': '#111111',
                         'luxe-gold': '#D4AF37',
                         'luxe-gray': '#888888',
+                        'hacker-green': '#00ff41',
                     },
                     fontFamily: {
                         heading: ['"Syncopate"', 'sans-serif'],
-                        sans: ['"Space Grotesk"', 'sans-serif']
+                        sans: ['"Space Grotesk"', 'sans-serif'],
+                        mono: ['"Fira Code"', 'monospace']
                     }
                 }
             }
@@ -41,9 +43,9 @@
 
         .clip-text { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%); }
         .char-wrapper { display: inline-block; overflow: hidden; vertical-align: bottom; }
-        .char { display: inline-block; transform: translateY(100%); will-change: transform, filter; }
+        .char { display: inline-block; transform: translateY(100%); will-change: transform; }
 
-        .magnetic-btn { display: inline-block; position: relative; will-change: transform; }
+        .magnetic-btn { display: inline-block; position: relative; will-change: transform; cursor: pointer; }
         
         .border-glow {
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -58,7 +60,7 @@
         .marquee-content span.highlight { color: #D4AF37; }
         @keyframes marquee { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
 
-        /* Objets vivants */
+        /* Objets vivants CSS */
         .db-disc { width: 60px; height: 16px; border: 1px solid #D4AF37; border-radius: 50%; background: rgba(212,175,55,0.05); position: absolute; left: 50%; transform: translateX(-50%); box-shadow: 0 5px 15px rgba(212,175,55,0.1); }
         .radar-box { width: 70px; height: 70px; border-radius: 50%; border: 1px dashed rgba(255,255,255,0.2); position: relative; display: flex; justify-content: center; align-items: center;}
         .radar-core { width: 10px; height: 10px; background: #D4AF37; border-radius: 50%; box-shadow: 0 0 10px #D4AF37;}
@@ -79,22 +81,60 @@
         }
         @keyframes shine { 0% { left: -150%; } 20% { left: 200%; } 100% { left: 200%; } }
 
-        .faq-content { height: 0; opacity: 0; overflow: hidden; }
+        /* Conteneurs 3D isolés */
+        .portal-3d { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 
+        /* ==========================================
+           MODE HACKER 2.0 CSS
+           ========================================== */
+        #hacker-terminal {
+            position: fixed; inset: 0; background: #050505; z-index: 99999;
+            color: #00ff41; font-family: 'Fira Code', monospace; padding: 30px;
+            display: none; flex-direction: column; overflow-y: auto;
+            text-shadow: 0 0 4px rgba(0,255,65,0.4);
+            font-size: 14px; line-height: 1.6;
+        }
+        .crt-overlay {
+            position: fixed; inset: 0; pointer-events: none; z-index: 999999; display: none;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            animation: flicker 0.15s infinite;
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+        }
+        @keyframes flicker { 0% { opacity: 0.95; } 50% { opacity: 1; } 100% { opacity: 0.98; } }
+        .term-input-container { display: flex; margin-top: 10px; }
+        #terminal-input { background: transparent; color: #00ff41; border: none; outline: none; flex: 1; font-family: 'Fira Code', monospace; caret-color: #00ff41; }
+        
+        .faq-content { height: 0; opacity: 0; overflow: hidden; }
     </style>
 </head>
 <body class="font-sans relative">
 
     <div class="glow-orb" id="mouse-orb"></div>
 
+    <div id="hacker-terminal">
+        <div id="terminal-output"></div>
+        <div class="term-input-container" id="input-line" style="display: none;">
+            <span class="mr-2">admin@yac-design:~$</span>
+            <input type="text" id="terminal-input" autocomplete="off" spellcheck="false">
+        </div>
+    </div>
+    <div class="crt-overlay" id="crt-overlay"></div>
+
     <nav class="fixed w-full z-50 top-0 py-6 px-8 md:px-16 flex justify-between items-center bg-luxe-black/80 backdrop-blur-md border-b border-white/5">
-        <div class="font-heading text-xl font-bold tracking-widest text-white cursor-pointer" onclick="window.scrollTo(0,0)">YAC<span class="text-luxe-gold">.</span></div>
+        <div class="flex items-center gap-4">
+            <div id="logo-trigger" class="font-heading text-xl font-bold tracking-widest text-white cursor-pointer select-none">YAC<span class="text-luxe-gold">.</span></div>
+            <div class="hidden md:flex items-center text-[9px] font-mono text-luxe-gold border border-luxe-gold/30 px-3 py-1.5 rounded-sm bg-luxe-gold/10 animate-pulse tracking-widest">
+                >_ TAPEZ "CODE"
+            </div>
+            <div class="flex md:hidden items-center text-[9px] font-mono text-luxe-gold border border-luxe-gold/30 px-2 py-1 rounded-sm bg-luxe-gold/10 animate-pulse tracking-widest">
+                >_ TAPPEZ 3X ICI
+            </div>
+        </div>
         <a href="https://ig.me/m/yac_design4" target="_blank" class="text-xs uppercase tracking-[0.2em] hover:text-luxe-gold transition">Contact</a>
     </nav>
 
     <header class="relative min-h-screen flex flex-col justify-center items-center text-center px-4 overflow-hidden pt-20">
-        <img src="logo.png" alt="Logo" class="w-24 md:w-32 mb-12 opacity-0 hero-elem" onerror="this.style.display='none'">
-        
         <div class="tagline uppercase tracking-[0.4em] text-luxe-gold text-[10px] md:text-xs font-bold mb-8 opacity-0 hero-elem border border-luxe-gold/30 px-6 py-2 rounded-full">
             Studio d'Ingénierie Digitale
         </div>
@@ -134,7 +174,6 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            
             <div class="flex flex-col gap-6 group gs-reveal">
                 <div class="relative w-full h-[350px] lg:h-[400px] rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-b from-transparent to-white/5 transition-colors duration-500 group-hover:border-luxe-gold/30">
                     <div id="canvas-torus" class="absolute inset-0 z-0 pointer-events-none"></div>
@@ -164,38 +203,10 @@
                     <p class="text-gray-400 text-sm font-light leading-relaxed">Une expérience utilisateur sans accroc. De la sélection à la caution Stripe, l'argent et l'information circulent de manière aussi fluide qu'une onde.</p>
                 </div>
             </div>
-
         </div>
     </section>
 
     <section class="py-24 px-4 md:px-12 max-w-[1400px] mx-auto border-t border-white/5 relative z-10 mt-12">
-        <div class="mb-20 text-center md:text-left">
-            <h2 class="font-heading text-3xl md:text-5xl uppercase split-text" data-split="Au-delà du web.">Au-delà du web.</h2>
-            <p class="text-luxe-gray mt-6 max-w-xl font-light text-sm md:text-base leading-relaxed gs-reveal">
-                Un site internet ne doit pas être une simple carte de visite. C'est un employé modèle qui travaille 24h/24, 7j/7.
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16">
-            <div class="expertise-card group relative gs-reveal">
-                <div class="float-num text-luxe-gold font-heading text-5xl mb-6 opacity-30 group-hover:opacity-100 transition duration-500">01.</div>
-                <h3 class="font-heading text-xl mb-4 text-white uppercase tracking-widest">Sur-Mesure</h3>
-                <p class="text-gray-400 font-light text-sm leading-relaxed">Fini les thèmes préfabriqués qui brident votre potentiel. Je conçois des interfaces uniques calibrées pour vos objectifs de vente.</p>
-            </div>
-            <div class="expertise-card group relative gs-reveal">
-                <div class="float-num text-luxe-gold font-heading text-5xl mb-6 opacity-30 group-hover:opacity-100 transition duration-500">02.</div>
-                <h3 class="font-heading text-xl mb-4 text-white uppercase tracking-widest">Automatisé</h3>
-                <p class="text-gray-400 font-light text-sm leading-relaxed">Réservations synchronisées, stocks en temps réel et cautions sécurisées. Vous vous concentrez sur votre métier, le système gère le reste.</p>
-            </div>
-            <div class="expertise-card group relative gs-reveal">
-                <div class="float-num text-luxe-gold font-heading text-5xl mb-6 opacity-30 group-hover:opacity-100 transition duration-500">03.</div>
-                <h3 class="font-heading text-xl mb-4 text-white uppercase tracking-widest">Évolutif</h3>
-                <p class="text-gray-400 font-light text-sm leading-relaxed">Un business grandit, votre site doit le suivre. J'assure la maintenance et l'ajout de fonctionnalités pour toujours garder une longueur d'avance.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-24 px-4 md:px-12 max-w-[1400px] mx-auto border-t border-white/5 relative z-10">
         <div class="mb-16 text-center md:text-left">
             <h2 class="font-heading text-3xl md:text-5xl uppercase split-text" data-split="La Mécanique">La Mécanique</h2>
             <h2 class="font-heading text-3xl md:text-5xl uppercase text-luxe-gold split-text mt-2" data-split="du Luxe">du Luxe</h2>
@@ -241,48 +252,25 @@
         </div>
     </section>
 
-    <section class="py-32 px-4 md:px-12 max-w-[1400px] mx-auto border-t border-white/5 relative z-10">
-        <div class="text-center mb-20">
-            <h2 class="font-heading text-3xl md:text-5xl uppercase split-text" data-split="La Méthodologie">La Méthodologie</h2>
-        </div>
+    <section class="py-32 px-4 relative border-t border-white/5 z-10 overflow-hidden">
+        <div class="max-w-6xl mx-auto relative z-10 w-full flex flex-col items-center">
+            
+            <h2 class="font-heading text-3xl md:text-6xl uppercase text-center mb-4 split-text drop-shadow-[0_0_20px_rgba(212,175,55,0.5)]" data-split="L'Investissement">L'Investissement</h2>
+            <p class="text-center text-luxe-gold uppercase tracking-[0.4em] text-xs md:text-sm mb-12 font-bold gs-reveal">Il est temps de passer à la vitesse supérieure</p>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
-            <div class="hidden md:block absolute top-1/4 left-1/6 w-2/3 h-[1px] bg-white/10 z-0">
-                <div class="h-full bg-luxe-gold w-0" id="process-line"></div>
+            <div class="relative w-full max-w-3xl mx-auto h-[350px] md:h-[450px] mb-16 gs-reveal">
+                <div id="canvas-clock" class="absolute inset-0 z-0 pointer-events-none opacity-90"></div>
             </div>
 
-            <div class="relative z-10 flex flex-col items-center text-center gs-reveal">
-                <div class="w-16 h-16 rounded-full bg-luxe-black border border-luxe-gold flex items-center justify-center font-heading text-xl text-luxe-gold mb-6 shadow-[0_0_20px_rgba(212,175,55,0.2)]">I</div>
-                <h3 class="font-heading text-lg text-white mb-3">Conception & Stratégie</h3>
-                <p class="text-luxe-gray text-sm font-light px-4">Analyse de vos besoins, maquettage UI/UX et définition du tunnel de vente parfait pour votre cible.</p>
-            </div>
-            <div class="relative z-10 flex flex-col items-center text-center gs-reveal" data-delay="0.2">
-                <div class="w-16 h-16 rounded-full bg-luxe-black border border-luxe-gold flex items-center justify-center font-heading text-xl text-luxe-gold mb-6 shadow-[0_0_20px_rgba(212,175,55,0.2)]">II</div>
-                <h3 class="font-heading text-lg text-white mb-3">Architecture & Code</h3>
-                <p class="text-luxe-gray text-sm font-light px-4">Développement sur-mesure de l'interface, branchement des bases de données et intégration des paiements Stripe.</p>
-            </div>
-            <div class="relative z-10 flex flex-col items-center text-center gs-reveal" data-delay="0.4">
-                <div class="w-16 h-16 rounded-full bg-luxe-black border border-luxe-gold flex items-center justify-center font-heading text-xl text-luxe-gold mb-6 shadow-[0_0_20px_rgba(212,175,55,0.2)]">III</div>
-                <h3 class="font-heading text-lg text-white mb-3">Déploiement & Suivi</h3>
-                <p class="text-luxe-gray text-sm font-light px-4">Mise en ligne sur serveurs mondiaux (Cloudflare), formation au back-office et maintenance continue.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-32 px-4 relative border-t border-white/5 z-10">
-        <div class="max-w-5xl mx-auto relative z-10">
-            <h2 class="font-heading text-3xl md:text-5xl uppercase text-center mb-20 split-text" data-split="L'Investissement">L'Investissement</h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 w-full">
                 <div class="price-card bg-luxe-dark border-glow rounded-3xl p-10 flex flex-col justify-between gs-reveal">
                     <div>
-                        <h3 class="font-heading text-xl text-luxe-gold mb-2">Site Vitrine</h3>
+                        <h3 class="font-heading text-xl text-white mb-2">Site Vitrine</h3>
                         <p class="text-luxe-gray text-sm mb-8">La présence digitale parfaite pour démarrer.</p>
                         <div class="text-5xl font-bold mb-8">9,99€<span class="text-lg text-luxe-gray font-normal">/mois</span></div>
                         <ul class="space-y-4 mb-10 text-sm text-gray-300">
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-luxe-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <strong>Idéal Prestataires de services</strong></li>
+                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-luxe-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <strong>Idéal Prestataires</strong></li>
                             <li class="flex items-center gap-3"><svg class="w-5 h-5 text-luxe-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Présentation & Tarifs clairs</li>
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-luxe-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Boutons de Réservation intégrés</li>
                             <li class="flex items-center gap-3"><svg class="w-5 h-5 text-luxe-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Design Premium 100% Mobile</li>
                         </ul>
                     </div>
@@ -296,11 +284,10 @@
                         <p class="text-luxe-gray text-sm mb-8">L'usine à conversion totalement automatisée.</p>
                         <div class="text-6xl font-bold text-luxe-gold mb-8">25,99€<span class="text-lg text-luxe-gray font-normal">/mois</span></div>
                         <ul class="space-y-4 mb-10 text-sm text-gray-200">
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-luxe-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <strong>Idéal Boutiques de Luxe</strong></li>
+                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-luxe-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <strong>Idéal Boutiques & Loueurs</strong></li>
                             <li class="flex items-center gap-3"><svg class="w-5 h-5 text-luxe-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Bases de données & Stocks en direct</li>
                             <li class="flex items-center gap-3"><svg class="w-5 h-5 text-luxe-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Paiements Stripe & Cautions gérés</li>
                             <li class="flex items-center gap-3"><svg class="w-5 h-5 text-luxe-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Notifications Telegram temps réel</li>
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-luxe-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Hébergement & Mises à jour inclus</li>
                         </ul>
                     </div>
                     <a href="https://ig.me/m/yac_design4" target="_blank" class="relative z-10 block w-full text-center bg-luxe-gold text-black py-4 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white transition duration-300">Lancer mon projet 🚀</a>
@@ -309,49 +296,12 @@
         </div>
     </section>
 
-    <section class="py-32 px-4 md:px-12 max-w-3xl mx-auto border-t border-white/5 z-10 relative">
-        <h2 class="font-heading text-2xl md:text-4xl uppercase text-center mb-16 gs-reveal">Questions Fréquentes</h2>
-        
-        <div class="space-y-4 gs-reveal">
-            <div class="faq-item border-b border-white/10 pb-4">
-                <button class="faq-btn w-full flex justify-between items-center text-left py-4 focus:outline-none group">
-                    <span class="font-heading text-sm md:text-base tracking-wide text-white group-hover:text-luxe-gold transition">Pourquoi un abonnement mensuel ?</span>
-                    <span class="faq-icon text-luxe-gold text-2xl font-light">+</span>
-                </button>
-                <div class="faq-content text-luxe-gray font-light text-sm leading-relaxed">
-                    <div class="pb-6 pt-2">Contrairement aux agences classiques qui facturent un site 3000€ puis disparaissent, l'abonnement couvre l'hébergement ultra-rapide, la sécurité, et surtout la maintenance. Votre site évolue en permanence sans aucun frais caché.</div>
-                </div>
-            </div>
-            
-            <div class="faq-item border-b border-white/10 pb-4">
-                <button class="faq-btn w-full flex justify-between items-center text-left py-4 focus:outline-none group">
-                    <span class="font-heading text-sm md:text-base tracking-wide text-white group-hover:text-luxe-gold transition">Y a-t-il un engagement ?</span>
-                    <span class="faq-icon text-luxe-gold text-2xl font-light">+</span>
-                </button>
-                <div class="faq-content text-luxe-gray font-light text-sm leading-relaxed">
-                    <div class="pb-6 pt-2">Absolument aucun. Je suis tellement confiant dans la qualité et la rentabilité des logiciels que je fournis que vous êtes libre d'arrêter à tout moment.</div>
-                </div>
-            </div>
-
-            <div class="faq-item border-b border-white/10 pb-4">
-                <button class="faq-btn w-full flex justify-between items-center text-left py-4 focus:outline-none group">
-                    <span class="font-heading text-sm md:text-base tracking-wide text-white group-hover:text-luxe-gold transition">Utilisez-vous WordPress ou Shopify ?</span>
-                    <span class="faq-icon text-luxe-gold text-2xl font-light">+</span>
-                </button>
-                <div class="faq-content text-luxe-gray font-light text-sm leading-relaxed">
-                    <div class="pb-6 pt-2">Non. Ces plateformes sont lourdes et demandent l'achat de dizaines de plugins. Je code votre interface sur-mesure et j'utilise des bases de données de pointe (Supabase) pour une sécurité et une vitesse maximales.</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <footer class="pt-32 pb-12 text-center border-t border-white/5 relative z-10 overflow-hidden">
         <div class="gs-reveal mb-12">
-            <h2 class="font-heading text-[15vw] leading-none text-white/5 tracking-tighter mix-blend-overlay pointer-events-none select-none">YAC DESIGN</h2>
+            <h2 class="font-heading text-[15vw] leading-none text-white/5 tracking-tighter pointer-events-none select-none">YAC DESIGN</h2>
         </div>
         <div class="flex justify-center space-x-8 text-[10px] tracking-[0.2em] uppercase text-luxe-gray mb-8 font-medium">
             <a href="https://ig.me/m/yac_design4" target="_blank" class="hover:text-luxe-gold transition">Instagram</a>
-            <a href="#" class="hover:text-luxe-gold transition">Mentions Légales</a>
         </div>
         <p class="text-luxe-gray text-[10px] uppercase tracking-[0.3em]">© 2026 - L'ingénierie du Luxe.</p>
     </footer>
@@ -362,9 +312,7 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // ==========================================
         // 1. GESTION SOURIS GLOBALE & ORBE
-        // ==========================================
         const orb = document.getElementById('mouse-orb');
         const xTo = gsap.quickTo(orb, "left", {duration: 0.8, ease: "power3"});
         const yTo = gsap.quickTo(orb, "top", {duration: 0.8, ease: "power3"});
@@ -378,15 +326,12 @@
             targetX = (e.clientX - windowHalfX) * 0.001;
             targetY = (e.clientY - windowHalfY) * 0.001;
         });
-
         window.addEventListener("resize", () => {
             windowHalfX = window.innerWidth / 2;
             windowHalfY = window.innerHeight / 2;
         });
 
-        // ==========================================
         // 2. BOUTON MAGNÉTIQUE & TEXTES SPLIT
-        // ==========================================
         document.querySelectorAll('.magnetic-wrap').forEach((magnet) => {
             const btn = magnet.querySelector('.magnetic-btn');
             magnet.addEventListener('mousemove', (e) => {
@@ -406,9 +351,7 @@
             });
         });
 
-        // ==========================================
-        // 3. ANIMATIONS GSAP (Scroll & Hero)
-        // ==========================================
+        // 3. ANIMATIONS GSAP
         const tl = gsap.timeline();
         tl.to(".hero-title", { y: "0%", duration: 1.2, stagger: 0.2, ease: "power4.out", clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" })
           .to(".hero-elem", { opacity: 1, y: 0, duration: 1, stagger: 0.1, ease: "power2.out" }, "-=0.8");
@@ -423,41 +366,21 @@
 
         gsap.utils.toArray('.float-num').forEach(num => gsap.to(num, { y: -15, yoyo: true, repeat: -1, duration: 2+Math.random(), ease: "sine.inOut" }));
         gsap.utils.toArray('.price-card').forEach((card, i) => gsap.to(card, { y: -10, yoyo: true, repeat: -1, duration: 3+i, ease: "sine.inOut" }));
-        gsap.to("#process-line", { scrollTrigger: { trigger: "#process-line", start: "top 80%", end: "bottom 20%", scrub: 1 }, width: "100%", ease: "none" });
 
-        // Anim Mécanique Vivante
+        // Anim Mécanique
         gsap.to(".db-disc", { y: -8, duration: 1.5, stagger: 0.2, yoyo: true, repeat: -1, ease: "sine.inOut", backgroundColor: "rgba(212,175,55,0.2)", boxShadow: "0 0 15px rgba(212,175,55,0.4)" });
         gsap.timeline({repeat: -1}).to("#pulse-dot", { x: -35, y: -35, duration: 0.8, ease: "power1.inOut" }).to("#pulse-dot", { opacity: 0, duration: 0.1 }).set("#pulse-dot", { x: 0, y: 0 }).to("#pulse-dot", { opacity: 1, duration: 0.1 }).to("#pulse-dot", { x: 35, y: -25, duration: 0.8, ease: "power1.inOut" }).to("#pulse-dot", { opacity: 0, duration: 0.1 }).set("#pulse-dot", { x: 0, y: 0 }).to("#pulse-dot", { opacity: 1, duration: 0.1 });
 
-        // FAQ
-        document.querySelectorAll('.faq-item').forEach(item => {
-            item.querySelector('.faq-btn').addEventListener('click', () => {
-                const isOpen = item.classList.contains('open');
-                document.querySelectorAll('.faq-item').forEach(other => {
-                    other.classList.remove('open'); gsap.to(other.querySelector('.faq-content'), {height: 0, opacity: 0, duration: 0.3}); other.querySelector('.faq-icon').textContent = '+';
-                });
-                if(!isOpen) {
-                    item.classList.add('open');
-                    const content = item.querySelector('.faq-content');
-                    gsap.set(content, { height: "auto" });
-                    const h = content.offsetHeight; gsap.set(content, { height: 0 });
-                    gsap.to(content, { height: h, opacity: 1, duration: 0.4, ease: "power2.out" });
-                    item.querySelector('.faq-icon').textContent = '-';
-                }
-            });
-        });
 
         // ==========================================
-        // 4. TROIS SCÈNES THREE.JS (DANS LEURS CADRES PROPRES)
+        // 4. QUATRE SCÈNES 3D (Portails + Horloge Prix)
         // ==========================================
-        
         function create3DScene(containerId, geoType) {
             const container = document.getElementById(containerId);
             if(!container) return null;
-
             const scene = new THREE.Scene();
             
-            const cameraZ = (geoType === 'sphere') ? 50 : 48;
+            const cameraZ = (geoType === 'clock') ? 55 : ((geoType === 'sphere') ? 50 : 48);
             const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
             camera.position.z = cameraZ; 
 
@@ -466,73 +389,93 @@
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             container.appendChild(renderer.domElement);
 
-            let geometry, material, mesh;
-            material = new THREE.PointsMaterial({
-                color: 0xD4AF37, size: 0.15, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending
-            });
+            let mesh;
+            
+            if(geoType === 'clock') {
+                const clockGroup = new THREE.Group();
 
-            if (geoType === 'torus') {
-                geometry = new THREE.TorusKnotGeometry(12, 3, 250, 40);
-                mesh = new THREE.Points(geometry, material);
+                // Cadran Extérieur
+                const dialGeo = new THREE.RingGeometry(22, 23, 60);
+                const dialMat = new THREE.PointsMaterial({ color: 0xD4AF37, size: 0.15, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+                clockGroup.add(new THREE.Points(dialGeo, dialMat));
+
+                // Anneau Intérieur
+                const innerGeo = new THREE.RingGeometry(18, 18.5, 80);
+                const innerMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending });
+                clockGroup.add(new THREE.Points(innerGeo, innerMat));
+
+                // Aiguille Rapide (Minutes)
+                const minGeo = new THREE.PlaneGeometry(0.2, 19);
+                minGeo.translate(0, 9.5, 0); // Décaler le point de rotation
+                const minMat = new THREE.PointsMaterial({ color: 0xD4AF37, size: 0.4 });
+                clockGroup.add(new THREE.Points(minGeo, minMat));
+
+                // Aiguille Lente (Heures)
+                const hrGeo = new THREE.PlaneGeometry(0.4, 12);
+                hrGeo.translate(0, 6, 0);
+                const hrMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.4 });
+                clockGroup.add(new THREE.Points(hrGeo, hrMat));
+
+                // Centre
+                const centerGeo = new THREE.CircleGeometry(1.5, 32);
+                clockGroup.add(new THREE.Points(centerGeo, new THREE.PointsMaterial({ color: 0xD4AF37, size: 0.2 })));
+
+                mesh = clockGroup;
             } 
-            else if (geoType === 'sphere') {
-                geometry = new THREE.BufferGeometry();
-                const particlesCount = 8000;
-                const posArray = new Float32Array(particlesCount * 3);
-                for(let i=0; i<particlesCount*3; i++) posArray[i] = (Math.random() - 0.5) * 40;
-                geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-                material.size = 0.1;
-                const positions = geometry.attributes.position.array;
-                for(let i=0; i<particlesCount; i++) {
-                    const theta = Math.random() * 2 * Math.PI; const phi = Math.acos(2 * Math.random() - 1);
-                    const r = 14;
-                    positions[i*3] = r * Math.sin(phi) * Math.cos(theta);
-                    positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
-                    positions[i*3+2] = r * Math.cos(phi);
-                }
-                mesh = new THREE.Points(geometry, material);
+            else {
+                let geo, mat = new THREE.PointsMaterial({ color: 0xD4AF37, size: 0.15, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+                if(geoType === 'torus') { geo = new THREE.TorusKnotGeometry(12, 3, 200, 30); } 
+                else if(geoType === 'sphere') {
+                    geo = new THREE.BufferGeometry(); const count = 6000; const pos = new Float32Array(count * 3);
+                    for(let i=0; i<count; i++) {
+                        const t = Math.random()*2*Math.PI, p = Math.acos(2*Math.random()-1);
+                        pos[i*3] = 14*Math.sin(p)*Math.cos(t); pos[i*3+1] = 14*Math.sin(p)*Math.sin(t); pos[i*3+2] = 14*Math.cos(p);
+                    }
+                    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); mat.size = 0.1;
+                } else { geo = new THREE.PlaneGeometry(40, 40, 50, 50); mat.color.setHex(0xD4AF37); }
+                mesh = new THREE.Points(geo, mat);
+                if(geoType === 'wave') mesh.rotation.x = -Math.PI / 2.5;
             }
-            else if (geoType === 'wave') {
-                geometry = new THREE.PlaneGeometry(50, 50, 60, 60);
-                mesh = new THREE.Points(geometry, material);
-                mesh.rotation.x = -Math.PI / 2.5;
-            }
+            
             scene.add(mesh);
             return { scene, camera, renderer, mesh, container, type: geoType };
         }
 
-        // Initialisation
-        const scenes = [
-            create3DScene('canvas-torus', 'torus'),
-            create3DScene('canvas-sphere', 'sphere'),
-            create3DScene('canvas-wave', 'wave')
+        const scenes = [ 
+            create3DScene('canvas-torus', 'torus'), 
+            create3DScene('canvas-sphere', 'sphere'), 
+            create3DScene('canvas-wave', 'wave'),
+            create3DScene('canvas-clock', 'clock') 
         ];
-
-        let clock = new THREE.Clock();
+        
+        let clockTime = new THREE.Clock();
 
         function animateAll3D() {
             requestAnimationFrame(animateAll3D);
-            const elapsedTime = clock.getElapsedTime();
+            const elapsedTime = clockTime.getElapsedTime();
 
             scenes.forEach(sys => {
                 if(!sys) return;
+                
+                if(sys.type === 'clock') {
+                    sys.mesh.children[0].rotation.z -= 0.001; 
+                    sys.mesh.children[1].rotation.z += 0.002; 
+                    sys.mesh.children[2].rotation.z = -elapsedTime * 0.8; 
+                    sys.mesh.children[3].rotation.z = -elapsedTime * 0.06; 
 
-                if(sys.type === 'torus') {
-                    sys.mesh.rotation.y += 0.003;
-                    sys.mesh.rotation.x += 0.001;
-                } else if(sys.type === 'sphere') {
-                    sys.mesh.rotation.y -= 0.002;
-                    sys.mesh.rotation.z -= 0.001;
-                } else if(sys.type === 'wave') {
-                    const positions = sys.mesh.geometry.attributes.position.array;
-                    for(let i = 0; i < positions.length; i += 3) {
-                        const x = positions[i]; const y = positions[i+1];
-                        positions[i+2] = Math.sin(x * 0.2 + elapsedTime) * 2 + Math.cos(y * 0.2 + elapsedTime) * 2;
-                    }
-                    sys.mesh.geometry.attributes.position.needsUpdate = true;
-                    sys.mesh.rotation.z += 0.001;
+                    sys.mesh.rotation.x = 0.2 + Math.sin(elapsedTime * 0.3) * 0.1;
+                    sys.mesh.rotation.y = Math.cos(elapsedTime * 0.2) * 0.1;
                 }
-
+                else if(sys.type === 'torus') { sys.mesh.rotation.y += 0.003; sys.mesh.rotation.x += 0.001; } 
+                else if(sys.type === 'sphere') { sys.mesh.rotation.y -= 0.002; sys.mesh.rotation.z -= 0.001; } 
+                else if(sys.type === 'wave') {
+                    const pos = sys.mesh.geometry.attributes.position.array;
+                    for(let i = 0; i < pos.length; i += 3) {
+                        pos[i+2] = Math.sin(pos[i]*0.2 + elapsedTime)*2 + Math.cos(pos[i+1]*0.2 + elapsedTime)*2;
+                    }
+                    sys.mesh.geometry.attributes.position.needsUpdate = true; sys.mesh.rotation.z += 0.001;
+                }
+                
                 sys.camera.position.x += (targetX * 10 - sys.camera.position.x) * 0.05;
                 sys.camera.position.y += (-targetY * 10 - sys.camera.position.y) * 0.05;
                 sys.camera.lookAt(sys.scene.position);
@@ -549,6 +492,144 @@
                 sys.renderer.setSize(sys.container.clientWidth, sys.container.clientHeight);
             });
         });
+
+        // ==========================================
+        // 5. MODE HACKER 2.0 
+        // ==========================================
+        const terminal = document.getElementById('hacker-terminal');
+        const crt = document.getElementById('crt-overlay');
+        const termOutput = document.getElementById('terminal-output');
+        const termInput = document.getElementById('terminal-input');
+        const inputLine = document.getElementById('input-line');
+        
+        let typedKeys = "";
+        let tapCount = 0;
+        let isHackerActive = false;
+        let isTyping = false; 
+
+        async function typeLine(text, delay = 15, classStyle = "") {
+            const p = document.createElement('div');
+            if(classStyle) p.className = classStyle;
+            termOutput.appendChild(p);
+            for(let i=0; i<text.length; i++) {
+                p.textContent += text[i];
+                terminal.scrollTop = terminal.scrollHeight;
+                await new Promise(r => setTimeout(r, delay));
+            }
+            return p;
+        }
+
+        async function bootSequence() {
+            isHackerActive = true;
+            isTyping = true;
+            terminal.style.display = 'flex';
+            crt.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            termOutput.innerHTML = '';
+            inputLine.style.display = 'none';
+
+            await typeLine("YAC_OS v2.0.4 - SYSTEM BOOT...", 30);
+            await new Promise(r => setTimeout(r, 400));
+            await typeLine("Loading kernel modules: [OK]", 10);
+            await typeLine("Mounting root filesystem: [OK]", 10);
+            await typeLine("Starting network interface: eth0", 10);
+            await new Promise(r => setTimeout(r, 600));
+            await typeLine("WARNING: Unauthorized access detected.", 20, "text-red-500");
+            await typeLine("Bypassing security protocols...", 30);
+            await new Promise(r => setTimeout(r, 800));
+            await typeLine("ACCESS GRANTED.", 10, "text-white font-bold mb-4");
+            
+            await typeLine("Bienvenue dans l'interface d'administration Yac Design.");
+            await typeLine("Tapez 'help' pour voir les commandes disponibles.");
+            
+            isTyping = false;
+            inputLine.style.display = 'flex';
+            termInput.focus();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if(isHackerActive) {
+                if(e.key !== 'Enter') termInput.focus();
+                return;
+            }
+            typedKeys += e.key.toUpperCase();
+            if(typedKeys.includes("CODE")) { bootSequence(); typedKeys = ""; }
+            if(typedKeys.length > 10) typedKeys = typedKeys.slice(-10);
+        });
+
+        document.getElementById('logo-trigger').addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if(isHackerActive) return;
+            tapCount++;
+            if(tapCount >= 3) { bootSequence(); tapCount = 0; }
+            setTimeout(() => tapCount = 0, 1500);
+        });
+
+        termInput.addEventListener('keydown', async (e) => {
+            if(e.key === 'Enter' && !isTyping) {
+                const cmd = termInput.value.trim().toLowerCase();
+                const p = document.createElement('div');
+                p.textContent = `admin@yac-design:~$ ${cmd}`;
+                p.style.opacity = 0.7;
+                p.style.marginBottom = "8px";
+                termOutput.appendChild(p);
+                termInput.value = '';
+                
+                isTyping = true;
+                inputLine.style.display = 'none';
+
+                if(cmd === 'help') {
+                    await typeLine("Commandes système :");
+                    await typeLine("- prix    : Dévoile les tarifs réels de l'agence");
+                    await typeLine("- stack   : Liste les technologies utilisées");
+                    await typeLine("- whoami  : Identité du créateur");
+                    await typeLine("- clear   : Nettoie l'écran");
+                    await typeLine("- exit    : Ferme le terminal");
+                } 
+                else if(cmd === 'prix') {
+                    await typeLine("ANALYSE DES PRIX EN COURS...", 20);
+                    await new Promise(r => setTimeout(r, 500));
+                    await typeLine("> Site Vitrine : 9.99€ / mois");
+                    await typeLine("> Logiciel VIP : 25.99€ / mois");
+                    await typeLine("NOTE: Retour sur investissement estimé à +400% pour les clients actuels.", 10, "text-luxe-gold");
+                }
+                else if(cmd === 'stack') {
+                    await typeLine("TECH STACK DÉTECTÉE :");
+                    await typeLine("[FRONTEND] HTML5, TailwindCSS, GSAP, WebGL/Three.js");
+                    await typeLine("[BACKEND]  Supabase (PostgreSQL), Edge Functions");
+                    await typeLine("[PAYMENTS] Stripe API Integration");
+                    await typeLine("[ALERTS]   Telegram Bot API");
+                }
+                else if(cmd === 'whoami') {
+                    await typeLine("Nom de code : YACINE.");
+                    await typeLine("Rôle : Architecte Logiciel.");
+                    await typeLine("Objectif : Tuer la lenteur du web et remplacer WordPress par de l'ingénierie pure.");
+                }
+                else if(cmd === 'clear') {
+                    termOutput.innerHTML = '';
+                }
+                else if(cmd === 'exit') {
+                    await typeLine("Fermeture de la session...");
+                    await new Promise(r => setTimeout(r, 500));
+                    terminal.style.display = 'none';
+                    crt.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    isHackerActive = false;
+                }
+                else if(cmd !== '') {
+                    await typeLine(`bash: ${cmd}: command not found`, 10, "text-red-500");
+                }
+
+                if(cmd !== 'exit') {
+                    isTyping = false;
+                    inputLine.style.display = 'flex';
+                    termInput.focus();
+                    terminal.scrollTop = terminal.scrollHeight;
+                }
+            }
+        });
+        
+        terminal.addEventListener('click', () => { if(isHackerActive && !isTyping) termInput.focus(); });
 
     </script>
 </body>
