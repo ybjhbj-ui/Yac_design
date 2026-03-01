@@ -81,15 +81,15 @@
 
         .faq-content { height: 0; opacity: 0; overflow: hidden; }
 
-        /* Conteneur 3D */
-        #canvas-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none; /* Laisse passer les clics vers le texte */
+        /* Conteneurs 3D isolés */
+        .portal-3d {
+            position: absolute; inset: 0; z-index: 0; pointer-events: none;
+        }
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
     </style>
 </head>
@@ -133,20 +133,46 @@
         </div>
     </div>
 
-    <section class="relative min-h-[80vh] flex items-center justify-center border-t border-b border-white/5 my-24 overflow-hidden">
-        <div id="canvas-container"></div>
-        
-        <div class="relative z-10 text-center max-w-4xl px-4 pointer-events-none">
-            <h2 class="font-heading text-4xl md:text-7xl uppercase text-white mb-6 drop-shadow-[0_0_15px_rgba(0,0,0,0.8)] gs-reveal">
+    <section class="py-32 px-4 md:px-12 max-w-[1600px] mx-auto relative z-10">
+        <div class="text-center mb-16">
+            <h2 class="font-heading text-4xl md:text-6xl uppercase text-white mb-6 drop-shadow-2xl gs-reveal">
                 L'Immersion <span class="text-luxe-gold">Absolue</span>
             </h2>
-            <p class="text-gray-300 text-sm md:text-lg font-light leading-relaxed max-w-2xl mx-auto drop-shadow-[0_0_10px_rgba(0,0,0,0.8)] gs-reveal">
-                Le web de demain n'est pas plat. J'intègre des rendus WebGL et des mathématiques 3D directement dans le navigateur. Vos clients ne scrollent plus votre site : ils l'explorent.
+            <p class="text-gray-400 text-sm md:text-base font-light leading-relaxed max-w-2xl mx-auto gs-reveal">
+                Le web de demain n'est pas plat. J'intègre des rendus WebGL et des mathématiques 3D directement dans le navigateur. Vos clients ne scrollent plus, ils explorent.
             </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-auto lg:h-[600px]">
+            
+            <div class="relative rounded-3xl overflow-hidden h-[400px] lg:h-full border border-white/10 group gs-reveal">
+                <div id="canvas-torus" class="portal-3d"></div>
+                <div class="absolute bottom-6 left-6 right-6 glass-panel p-6 rounded-2xl transition-transform duration-500 group-hover:-translate-y-2 z-10">
+                    <h3 class="font-heading text-lg text-luxe-gold mb-2 uppercase">L'Architecture</h3>
+                    <p class="text-gray-300 text-xs font-light leading-relaxed">Une structure de code complexe et parfaitement entrelacée. Comme ce Tore, chaque fonction de votre site est connectée avec précision.</p>
+                </div>
+            </div>
+
+            <div class="relative rounded-3xl overflow-hidden h-[400px] lg:h-full border border-white/10 group gs-reveal" data-delay="0.2">
+                <div id="canvas-sphere" class="portal-3d"></div>
+                <div class="absolute bottom-6 left-6 right-6 glass-panel p-6 rounded-2xl transition-transform duration-500 group-hover:-translate-y-2 z-10">
+                    <h3 class="font-heading text-lg text-luxe-gold mb-2 uppercase">La Base de Données</h3>
+                    <p class="text-gray-300 text-xs font-light leading-relaxed">Un noyau central robuste. Des milliers de données clients et stocks gérées en temps réel via Supabase, illustrées par ce réseau de particules.</p>
+                </div>
+            </div>
+
+            <div class="relative rounded-3xl overflow-hidden h-[400px] lg:h-full border border-white/10 group gs-reveal" data-delay="0.4">
+                <div id="canvas-wave" class="portal-3d"></div>
+                <div class="absolute bottom-6 left-6 right-6 glass-panel p-6 rounded-2xl transition-transform duration-500 group-hover:-translate-y-2 z-10">
+                    <h3 class="font-heading text-lg text-luxe-gold mb-2 uppercase">Le Flux Financier</h3>
+                    <p class="text-gray-300 text-xs font-light leading-relaxed">Une expérience utilisateur fluide et sans accroc. De la réservation jusqu'à la caution Stripe, l'argent circule comme une onde parfaite.</p>
+                </div>
+            </div>
+
         </div>
     </section>
 
-    <section class="py-24 px-4 md:px-12 max-w-[1400px] mx-auto relative z-10">
+    <section class="py-24 px-4 md:px-12 max-w-[1400px] mx-auto border-t border-white/5 relative z-10 mt-12">
         <div class="mb-20 text-center md:text-left">
             <h2 class="font-heading text-3xl md:text-5xl uppercase split-text" data-split="Au-delà du web.">Au-delà du web.</h2>
             <p class="text-luxe-gray mt-6 max-w-xl font-light text-sm md:text-base leading-relaxed gs-reveal">
@@ -340,191 +366,197 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // 1. L'ORBE MAGNÉTIQUE SUR LA SOURIS
+        // ==========================================
+        // 1. GESTION SOURIS GLOBALE & ORBE
+        // ==========================================
         const orb = document.getElementById('mouse-orb');
-        let mouseX = window.innerWidth / 2;
-        let mouseY = window.innerHeight / 2;
-        
         const xTo = gsap.quickTo(orb, "left", {duration: 0.8, ease: "power3"});
         const yTo = gsap.quickTo(orb, "top", {duration: 0.8, ease: "power3"});
 
-        // Variables pour la souris globale (utilisées par l'orbe et la 3D)
-        let targetX = 0;
-        let targetY = 0;
-        const windowHalfX = window.innerWidth / 2;
-        const windowHalfY = window.innerHeight / 2;
+        let targetX = 0; let targetY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
 
         window.addEventListener("mousemove", e => {
-            xTo(e.clientX);
-            yTo(e.clientY);
-            
-            // Calculs pour l'effet Parallax 3D
+            xTo(e.clientX); yTo(e.clientY);
             targetX = (e.clientX - windowHalfX) * 0.001;
             targetY = (e.clientY - windowHalfY) * 0.001;
         });
 
-        // 2. BOUTON MAGNÉTIQUE
-        const magnets = document.querySelectorAll('.magnetic-wrap');
-        magnets.forEach((magnet) => {
+        window.addEventListener("resize", () => {
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
+        });
+
+        // ==========================================
+        // 2. BOUTON MAGNÉTIQUE & TEXTES SPLIT
+        // ==========================================
+        document.querySelectorAll('.magnetic-wrap').forEach((magnet) => {
             const btn = magnet.querySelector('.magnetic-btn');
             magnet.addEventListener('mousemove', (e) => {
-                const position = magnet.getBoundingClientRect();
-                const x = e.pageX - position.left - position.width / 2;
-                const y = e.pageY - position.top - position.height / 2;
-                gsap.to(btn, { x: x * 0.3, y: y * 0.3, duration: 1, ease: "power3.out" });
+                const pos = magnet.getBoundingClientRect();
+                gsap.to(btn, { x: (e.pageX - pos.left - pos.width/2)*0.3, y: (e.pageY - pos.top - pos.height/2)*0.3, duration: 1, ease: "power3.out" });
             });
-            magnet.addEventListener('mouseleave', () => {
-                gsap.to(btn, { x: 0, y: 0, duration: 1, ease: "elastic.out(1, 0.3)" });
-            });
+            magnet.addEventListener('mouseleave', () => gsap.to(btn, { x: 0, y: 0, duration: 1, ease: "elastic.out(1, 0.3)" }));
         });
 
-        // 3. CREATION DU SPLIT TEXT
         document.querySelectorAll('.split-text').forEach(el => {
-            const text = el.getAttribute('data-split');
-            el.innerHTML = '';
+            const text = el.getAttribute('data-split'); el.innerHTML = '';
             text.split('').forEach(char => {
-                const wrapper = document.createElement('span');
-                wrapper.className = 'char-wrapper';
-                const span = document.createElement('span');
-                span.className = 'char';
-                span.innerHTML = char === ' ' ? '&nbsp;' : char;
-                wrapper.appendChild(span);
-                el.appendChild(wrapper);
+                const w = document.createElement('span'); w.className = 'char-wrapper';
+                const s = document.createElement('span'); s.className = 'char';
+                s.innerHTML = char === ' ' ? '&nbsp;' : char;
+                w.appendChild(s); el.appendChild(w);
             });
         });
 
-        // 4. ANIMATION D'ENTRÉE (HERO)
+        // ==========================================
+        // 3. ANIMATIONS GSAP (Scroll & Hero)
+        // ==========================================
         const tl = gsap.timeline();
         tl.to(".hero-title", { y: "0%", duration: 1.2, stagger: 0.2, ease: "power4.out", clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" })
           .to(".hero-elem", { opacity: 1, y: 0, duration: 1, stagger: 0.1, ease: "power2.out" }, "-=0.8");
 
-        // 5. ANIMATION AU SCROLL : APPARITION DES BLOCS
         gsap.utils.toArray('.gs-reveal').forEach(elem => {
-            const delay = elem.getAttribute('data-delay') || 0;
-            gsap.from(elem, {
-                scrollTrigger: { trigger: elem, start: "top 85%" },
-                y: 30, opacity: 0, duration: 1, delay: parseFloat(delay), ease: "power2.out"
-            });
+            gsap.from(elem, { scrollTrigger: { trigger: elem, start: "top 85%" }, y: 30, opacity: 0, duration: 1, delay: parseFloat(elem.getAttribute('data-delay') || 0), ease: "power2.out" });
         });
 
-        // 6. ANIMATION AU SCROLL : TITRES MAGIQUES
         gsap.utils.toArray('.split-text').forEach(title => {
-            const chars = title.querySelectorAll('.char');
-            gsap.fromTo(chars, 
-                { y: '100%', opacity: 0, filter: 'blur(10px)' },
-                { scrollTrigger: { trigger: title, start: "top 85%" }, y: '0%', opacity: 1, filter: 'blur(0px)', duration: 0.8, stagger: 0.05, ease: "back.out(1.7, 1.2)" }
-            );
+            gsap.fromTo(title.querySelectorAll('.char'), { y: '100%', opacity: 0, filter: 'blur(10px)' }, { scrollTrigger: { trigger: title, start: "top 85%" }, y: '0%', opacity: 1, filter: 'blur(0px)', duration: 0.8, stagger: 0.05, ease: "back.out(1.7)" });
         });
 
-        // 7. LÉVITATION DES NUMÉROS ET DES CARTES PRIX
-        gsap.utils.toArray('.float-num').forEach(num => {
-            gsap.to(num, { y: -15, yoyo: true, repeat: -1, duration: 2 + Math.random(), ease: "sine.inOut" });
-        });
-        
-        gsap.utils.toArray('.price-card').forEach((card, i) => {
-            gsap.to(card, { y: -10, yoyo: true, repeat: -1, duration: 3 + i, ease: "sine.inOut" });
-        });
+        gsap.utils.toArray('.float-num').forEach(num => gsap.to(num, { y: -15, yoyo: true, repeat: -1, duration: 2+Math.random(), ease: "sine.inOut" }));
+        gsap.utils.toArray('.price-card').forEach((card, i) => gsap.to(card, { y: -10, yoyo: true, repeat: -1, duration: 3+i, ease: "sine.inOut" }));
+        gsap.to("#process-line", { scrollTrigger: { trigger: "#process-line", start: "top 80%", end: "bottom 20%", scrub: 1 }, width: "100%", ease: "none" });
 
-        // 8. ANIMATION DE LA LIGNE PROCESS
-        gsap.to("#process-line", {
-            scrollTrigger: { trigger: "#process-line", start: "top 80%", end: "bottom 20%", scrub: 1 },
-            width: "100%", ease: "none"
-        });
-
-        // 9. ANIMATIONS DES OBJETS VIVANTS (Section Mécanique)
+        // Anim Mécanique Vivante
         gsap.to(".db-disc", { y: -8, duration: 1.5, stagger: 0.2, yoyo: true, repeat: -1, ease: "sine.inOut", backgroundColor: "rgba(212,175,55,0.2)", boxShadow: "0 0 15px rgba(212,175,55,0.4)" });
-        const pulseTl = gsap.timeline({repeat: -1});
-        pulseTl.to("#pulse-dot", { x: -35, y: -35, duration: 0.8, ease: "power1.inOut" }).to("#pulse-dot", { opacity: 0, duration: 0.1 }).set("#pulse-dot", { x: 0, y: 0 }).to("#pulse-dot", { opacity: 1, duration: 0.1 }).to("#pulse-dot", { x: 35, y: -25, duration: 0.8, ease: "power1.inOut" }).to("#pulse-dot", { opacity: 0, duration: 0.1 }).set("#pulse-dot", { x: 0, y: 0 }).to("#pulse-dot", { opacity: 1, duration: 0.1 });
+        gsap.timeline({repeat: -1}).to("#pulse-dot", { x: -35, y: -35, duration: 0.8, ease: "power1.inOut" }).to("#pulse-dot", { opacity: 0, duration: 0.1 }).set("#pulse-dot", { x: 0, y: 0 }).to("#pulse-dot", { opacity: 1, duration: 0.1 }).to("#pulse-dot", { x: 35, y: -25, duration: 0.8, ease: "power1.inOut" }).to("#pulse-dot", { opacity: 0, duration: 0.1 }).set("#pulse-dot", { x: 0, y: 0 }).to("#pulse-dot", { opacity: 1, duration: 0.1 });
 
-        // 10. ACCORDÉON FAQ (Interactif)
-        const faqItems = document.querySelectorAll('.faq-item');
-        faqItems.forEach(item => {
-            const btn = item.querySelector('.faq-btn');
-            const content = item.querySelector('.faq-content');
-            const icon = item.querySelector('.faq-icon');
-            
-            btn.addEventListener('click', () => {
+        // FAQ
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.querySelector('.faq-btn').addEventListener('click', () => {
                 const isOpen = item.classList.contains('open');
-                
-                faqItems.forEach(other => {
-                    other.classList.remove('open');
-                    gsap.to(other.querySelector('.faq-content'), {height: 0, opacity: 0, duration: 0.3});
-                    other.querySelector('.faq-icon').textContent = '+';
+                document.querySelectorAll('.faq-item').forEach(other => {
+                    other.classList.remove('open'); gsap.to(other.querySelector('.faq-content'), {height: 0, opacity: 0, duration: 0.3}); other.querySelector('.faq-icon').textContent = '+';
                 });
-                
                 if(!isOpen) {
                     item.classList.add('open');
+                    const content = item.querySelector('.faq-content');
                     gsap.set(content, { height: "auto" });
-                    const targetHeight = content.offsetHeight;
-                    gsap.set(content, { height: 0 });
-                    gsap.to(content, { height: targetHeight, opacity: 1, duration: 0.4, ease: "power2.out" });
-                    icon.textContent = '-';
+                    const h = content.offsetHeight; gsap.set(content, { height: 0 });
+                    gsap.to(content, { height: h, opacity: 1, duration: 0.4, ease: "power2.out" });
+                    item.querySelector('.faq-icon').textContent = '-';
                 }
             });
         });
 
-        // 11. LE RENDU 3D THREE.JS (Torus Knot en Particules)
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
+        // ==========================================
+        // 4. TROIS SCÈNES THREE.JS MULTIPLES & CONTENUES
+        // ==========================================
         
-        // Caméra
-        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-        camera.position.z = 30;
+        function create3DScene(containerId, geoType) {
+            const container = document.getElementById(containerId);
+            if(!container) return null;
 
-        // Rendu
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        container.appendChild(renderer.domElement);
-
-        // Géométrie : Un TorusKnot très détaillé
-        const geometry = new THREE.TorusKnotGeometry(10, 3, 200, 32);
-        
-        // Matériel : Particules Dorées
-        const material = new THREE.PointsMaterial({ 
-            color: 0xD4AF37, 
-            size: 0.15,
-            transparent: true,
-            opacity: 0.8,
-            blending: THREE.AdditiveBlending
-        });
-
-        // Création du Mesh (Nuage de points)
-        const particlesMesh = new THREE.Points(geometry, material);
-        scene.add(particlesMesh);
-
-        // Animation de la scène 3D
-        let mouseX3D = 0;
-        let mouseY3D = 0;
-
-        function animate3D() {
-            requestAnimationFrame(animate3D);
-
-            // Rotation automatique lente
-            particlesMesh.rotation.y += 0.002;
-            particlesMesh.rotation.x += 0.001;
-
-            // Effet Parallax avec la souris fluide
-            mouseX3D += (targetX - mouseX3D) * 0.05;
-            mouseY3D += (targetY - mouseY3D) * 0.05;
+            const scene = new THREE.Scene();
             
-            camera.position.x += (mouseX3D * 10 - camera.position.x) * 0.05;
-            camera.position.y += (-mouseY3D * 10 - camera.position.y) * 0.05;
-            camera.lookAt(scene.position);
+            // Correction de contenance : On recule la caméra (Z-Factor) 
+            // pour s'assurer que l'objet reste bien à l'intérieur de sa boîte.
+            // Tore & Vague: 48, Sphère: 50.
+            const cameraZ = (geoType === 'sphere') ? 50 : 48;
+            const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.z = cameraZ; 
 
-            renderer.render(scene, camera);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            let geometry, material, mesh;
+            material = new THREE.PointsMaterial({
+                color: 0xD4AF37, size: 0.15, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending
+            });
+
+            if (geoType === 'torus') {
+                geometry = new THREE.TorusKnotGeometry(12, 3, 250, 40);
+                mesh = new THREE.Points(geometry, material);
+            } 
+            else if (geoType === 'sphere') {
+                geometry = new THREE.BufferGeometry();
+                const particlesCount = 8000;
+                const posArray = new Float32Array(particlesCount * 3);
+                for(let i=0; i<particlesCount*3; i++) posArray[i] = (Math.random() - 0.5) * 40;
+                geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+                material.size = 0.1;
+                const positions = geometry.attributes.position.array;
+                for(let i=0; i<particlesCount; i++) {
+                    const theta = Math.random() * 2 * Math.PI; const phi = Math.acos(2 * Math.random() - 1);
+                    const r = 14;
+                    positions[i*3] = r * Math.sin(phi) * Math.cos(theta);
+                    positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+                    positions[i*3+2] = r * Math.cos(phi);
+                }
+                mesh = new THREE.Points(geometry, material);
+            }
+            else if (geoType === 'wave') {
+                geometry = new THREE.PlaneGeometry(50, 50, 60, 60);
+                mesh = new THREE.Points(geometry, material);
+                mesh.rotation.x = -Math.PI / 2.5;
+            }
+            scene.add(mesh);
+            return { scene, camera, renderer, mesh, container, type: geoType };
         }
 
-        // Gérer le redimensionnement
-        window.addEventListener('resize', () => {
-            if(!container) return;
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        });
+        // Initialisation des 3 portails
+        const scenes = [
+            create3DScene('canvas-torus', 'torus'),
+            create3DScene('canvas-sphere', 'sphere'),
+            create3DScene('canvas-wave', 'wave')
+        ];
 
-        // Lancer l'animation
-        animate3D();
+        let clock = new THREE.Clock();
+
+        function animateAll3D() {
+            requestAnimationFrame(animateAll3D);
+            const elapsedTime = clock.getElapsedTime();
+
+            scenes.forEach(sys => {
+                if(!sys) return;
+
+                if(sys.type === 'torus') {
+                    sys.mesh.rotation.y += 0.003;
+                    sys.mesh.rotation.x += 0.001;
+                } else if(sys.type === 'sphere') {
+                    sys.mesh.rotation.y -= 0.002;
+                    sys.mesh.rotation.z -= 0.001;
+                } else if(sys.type === 'wave') {
+                    const positions = sys.mesh.geometry.attributes.position.array;
+                    for(let i = 0; i < positions.length; i += 3) {
+                        const x = positions[i]; const y = positions[i+1];
+                        positions[i+2] = Math.sin(x * 0.2 + elapsedTime) * 2 + Math.cos(y * 0.2 + elapsedTime) * 2;
+                    }
+                    sys.mesh.geometry.attributes.position.needsUpdate = true;
+                    sys.mesh.rotation.z += 0.001;
+                }
+
+                // Parallax contenu (X*15 -> X*10 pour plus de contenance)
+                sys.camera.position.x += (targetX * 10 - sys.camera.position.x) * 0.05;
+                sys.camera.position.y += (-targetY * 10 - sys.camera.position.y) * 0.05;
+                sys.camera.lookAt(sys.scene.position);
+                sys.renderer.render(sys.scene, sys.camera);
+            });
+        }
+        animateAll3D();
+
+        window.addEventListener('resize', () => {
+            scenes.forEach(sys => {
+                if(!sys) return;
+                sys.camera.aspect = sys.container.clientWidth / sys.container.clientHeight;
+                sys.camera.updateProjectionMatrix();
+                sys.renderer.setSize(sys.container.clientWidth, sys.container.clientHeight);
+            });
+        });
 
     </script>
 </body>
