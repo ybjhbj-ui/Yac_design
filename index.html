@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
     <script>
         tailwind.config = {
             theme: {
@@ -30,7 +32,6 @@
     <style>
         body { background-color: #050505; color: #ffffff; overflow-x: hidden; }
 
-        /* Orbe qui suit la souris */
         .glow-orb {
             position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1;
             background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, rgba(5,5,5,0) 70%);
@@ -70,7 +71,6 @@
         .morph-blob { width: 70px; height: 70px; background: linear-gradient(135deg, rgba(212,175,55,0.8), rgba(212,175,55,0.1)); animation: morph 6s ease-in-out infinite; border: 1px solid rgba(212,175,55,0.5); }
         @keyframes morph { 0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: rotate(0deg); } 50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; transform: rotate(180deg); } 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: rotate(360deg); } }
 
-        /* Reflet premium sur l'offre */
         .premium-shine { position: relative; overflow: hidden; }
         .premium-shine::after {
             content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%;
@@ -79,8 +79,18 @@
         }
         @keyframes shine { 0% { left: -150%; } 20% { left: 200%; } 100% { left: 200%; } }
 
-        /* FAQ */
         .faq-content { height: 0; opacity: 0; overflow: hidden; }
+
+        /* Conteneur 3D */
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none; /* Laisse passer les clics vers le texte */
+        }
     </style>
 </head>
 <body class="font-sans relative">
@@ -123,7 +133,20 @@
         </div>
     </div>
 
-    <section class="py-24 px-4 md:px-12 max-w-[1400px] mx-auto border-t border-white/5 relative mt-10 z-10">
+    <section class="relative min-h-[80vh] flex items-center justify-center border-t border-b border-white/5 my-24 overflow-hidden">
+        <div id="canvas-container"></div>
+        
+        <div class="relative z-10 text-center max-w-4xl px-4 pointer-events-none">
+            <h2 class="font-heading text-4xl md:text-7xl uppercase text-white mb-6 drop-shadow-[0_0_15px_rgba(0,0,0,0.8)] gs-reveal">
+                L'Immersion <span class="text-luxe-gold">Absolue</span>
+            </h2>
+            <p class="text-gray-300 text-sm md:text-lg font-light leading-relaxed max-w-2xl mx-auto drop-shadow-[0_0_10px_rgba(0,0,0,0.8)] gs-reveal">
+                Le web de demain n'est pas plat. J'intègre des rendus WebGL et des mathématiques 3D directement dans le navigateur. Vos clients ne scrollent plus votre site : ils l'explorent.
+            </p>
+        </div>
+    </section>
+
+    <section class="py-24 px-4 md:px-12 max-w-[1400px] mx-auto relative z-10">
         <div class="mb-20 text-center md:text-left">
             <h2 class="font-heading text-3xl md:text-5xl uppercase split-text" data-split="Au-delà du web.">Au-delà du web.</h2>
             <p class="text-luxe-gray mt-6 max-w-xl font-light text-sm md:text-base leading-relaxed gs-reveal">
@@ -317,18 +340,27 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // 1. L'ORBE MAGNÉTIQUE SUR LA SOURIS (Ultra Performant)
+        // 1. L'ORBE MAGNÉTIQUE SUR LA SOURIS
         const orb = document.getElementById('mouse-orb');
         let mouseX = window.innerWidth / 2;
         let mouseY = window.innerHeight / 2;
         
-        // GSAP quickTo est optimisé pour les événements mousemove
         const xTo = gsap.quickTo(orb, "left", {duration: 0.8, ease: "power3"});
         const yTo = gsap.quickTo(orb, "top", {duration: 0.8, ease: "power3"});
+
+        // Variables pour la souris globale (utilisées par l'orbe et la 3D)
+        let targetX = 0;
+        let targetY = 0;
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
 
         window.addEventListener("mousemove", e => {
             xTo(e.clientX);
             yTo(e.clientY);
+            
+            // Calculs pour l'effet Parallax 3D
+            targetX = (e.clientX - windowHalfX) * 0.001;
+            targetY = (e.clientY - windowHalfY) * 0.001;
         });
 
         // 2. BOUTON MAGNÉTIQUE
@@ -389,7 +421,6 @@
             gsap.to(num, { y: -15, yoyo: true, repeat: -1, duration: 2 + Math.random(), ease: "sine.inOut" });
         });
         
-        // Animation vivante des cartes Prix
         gsap.utils.toArray('.price-card').forEach((card, i) => {
             gsap.to(card, { y: -10, yoyo: true, repeat: -1, duration: 3 + i, ease: "sine.inOut" });
         });
@@ -415,17 +446,14 @@
             btn.addEventListener('click', () => {
                 const isOpen = item.classList.contains('open');
                 
-                // Fermer toutes les autres
                 faqItems.forEach(other => {
                     other.classList.remove('open');
                     gsap.to(other.querySelector('.faq-content'), {height: 0, opacity: 0, duration: 0.3});
                     other.querySelector('.faq-icon').textContent = '+';
                 });
                 
-                // Ouvrir celle cliquée si elle était fermée
                 if(!isOpen) {
                     item.classList.add('open');
-                    // On laisse le navigateur calculer la vraie hauteur avant d'animer
                     gsap.set(content, { height: "auto" });
                     const targetHeight = content.offsetHeight;
                     gsap.set(content, { height: 0 });
@@ -434,6 +462,69 @@
                 }
             });
         });
+
+        // 11. LE RENDU 3D THREE.JS (Torus Knot en Particules)
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        
+        // Caméra
+        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.z = 30;
+
+        // Rendu
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        // Géométrie : Un TorusKnot très détaillé
+        const geometry = new THREE.TorusKnotGeometry(10, 3, 200, 32);
+        
+        // Matériel : Particules Dorées
+        const material = new THREE.PointsMaterial({ 
+            color: 0xD4AF37, 
+            size: 0.15,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+
+        // Création du Mesh (Nuage de points)
+        const particlesMesh = new THREE.Points(geometry, material);
+        scene.add(particlesMesh);
+
+        // Animation de la scène 3D
+        let mouseX3D = 0;
+        let mouseY3D = 0;
+
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+
+            // Rotation automatique lente
+            particlesMesh.rotation.y += 0.002;
+            particlesMesh.rotation.x += 0.001;
+
+            // Effet Parallax avec la souris fluide
+            mouseX3D += (targetX - mouseX3D) * 0.05;
+            mouseY3D += (targetY - mouseY3D) * 0.05;
+            
+            camera.position.x += (mouseX3D * 10 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY3D * 10 - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        // Gérer le redimensionnement
+        window.addEventListener('resize', () => {
+            if(!container) return;
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        // Lancer l'animation
+        animate3D();
 
     </script>
 </body>
